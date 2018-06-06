@@ -107,30 +107,30 @@ class DiamondSquareGenerator(TerrainGenerator):
         return terrain
 
     def divide(self, size: int):
-        half = size // 2
+        id = size // 2
         scale = self.roughness * size
         
-        if half < 1:
+        if id < 1:
             return
         
         logger.debug('Size: {}\tScale: {}'.format(size, scale))
         # TODO: Remove this debug nonsense
         img = Image.fromarray(numpy.array(self.terrain, dtype=float), mode='F')
-        img.convert('RGB').save('terrain_size_{}.png'.format(size))
+        img.convert('RGB', dither=None).save('terrain_size_{}.png'.format(size))
         
         # Squares
-        for y in range(half, self.side_length-1, size):
-            for x in range(half, self.side_length-1, size):
-                s_scale = random.uniform(0,1) * scale
-                self.square(x,y, half, s_scale)
+        for y in range(id, self.side_length-1, size):
+            for x in range(id, self.side_length-1, size):
+                s_scale = random.uniform(-scale, scale)
+                self.square(x,y, id, s_scale)
 
         # Diamonds
         for y in range(0, self.side_length-1, size):
-            for x in range((y+half) % size, self.side_length-1, size):
-                d_scale = random.uniform(0,1) * scale
-                self.diamond(x,y, half, d_scale)
+            for x in range((y+id) % size, self.side_length-1, size):
+                d_scale = random.uniform(-scale, scale)
+                self.diamond(x,y, id, d_scale)
 
-        self.divide(half)
+        self.divide(id)
 
     def square(self, x, y, size, offset):
         tl = self.terrain[x-size][y-size]
@@ -139,7 +139,6 @@ class DiamondSquareGenerator(TerrainGenerator):
         bl = self.terrain[x+size][y-size]
 
         average = ((tl + tr + bl + br) / 4)
-        logger.debug('sqr point %i,%i: avg:\t%f, offset: %f' % (x,y,average,offset))
         self.terrain[x][y] = average + offset
 
     def diamond(self, x, y, size, offset):
@@ -149,14 +148,13 @@ class DiamondSquareGenerator(TerrainGenerator):
         r = self.terrain[x-size][y]
 
         average = ((t+l+b+r)/4)
-        logger.debug('dmd point %i,%i:\tavg: %f, offset: %f' % (x,y,average,offset))
         self.terrain[x][y] = average + offset
 
     def setup_terrain(self):
         logger.debug('Setting up terrain size %i', self.side_length)
         maximum = self.side_length - 1
 
-        self.terrain[0][0] = 1
-        self.terrain[maximum][0] = 0.5
-        self.terrain[0][maximum] = 0.5
-        self.terrain[maximum][maximum] = 1
+        self.terrain[0][0] = random.uniform(-self.side_length, self.side_length)
+        self.terrain[maximum][0] = random.uniform(-self.side_length, self.side_length)
+        self.terrain[0][maximum] = random.uniform(-self.side_length, self.side_length)
+        self.terrain[maximum][maximum] = random.uniform(-self.side_length, self.side_length)
