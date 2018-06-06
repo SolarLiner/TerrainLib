@@ -88,7 +88,7 @@ class TerrainGenerator(metaclass=abc.ABCMeta):
 
 
 class DiamondSquareGenerator(TerrainGenerator):
-    def __init__(self, size: int, roughness: float):
+    def __init__(self, size, roughness):
         self.side_length = (2**size)+1
         self.terrain = [[0 for _ in range(self.side_length)] for _ in range(self.side_length)]
         self.roughness = roughness
@@ -114,10 +114,6 @@ class DiamondSquareGenerator(TerrainGenerator):
         
         if id < 1:
             return
-        
-        # TODO: Remove this debug nonsense
-        img = Image.fromarray(numpy.array(self.terrain, dtype=float), mode='F')
-        img.convert('RGB', dither=None).save('terrain_size_{}.png'.format(size))
         
         # Squares
         for y in range(id, self.side_length-1, size):
