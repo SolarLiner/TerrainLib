@@ -102,3 +102,7 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Custom
+terrain_*.png
+terrain_final.txt
