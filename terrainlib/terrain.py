@@ -30,7 +30,7 @@ class Terrain:
         return self._heightmap[int(key[1] % self.size)][int(key[0] % self.size)]
 
     def __setitem__(self, key, value):
-        self._heightmap[key[1] % self.size][key[0] % self.size] = clamp(value)
+        self._heightmap[key[1] % self.size][key[0] % self.size] = value
 
     def __eq__(self, other):
         if isinstance(other, Terrain):
@@ -101,9 +101,11 @@ class DiamondSquareGenerator(TerrainGenerator):
     def gen_terrain(self):
         terrain = Terrain(self.side_length)
         height_scale = self.side_length-1
+        minimum = min([min(l) for l in self.terrain])
+        maximum = max([max(l) for l in self.terrain]) - minimum
         for y in range(self.side_length):
             for x in range(self.side_length):
-                terrain[x,y] = self.terrain[x][y] / height_scale
+                terrain[x,y] = (self.terrain[x][y] - minimum) / maximum
         return terrain
 
     def divide(self, size: int):
@@ -113,7 +115,6 @@ class DiamondSquareGenerator(TerrainGenerator):
         if id < 1:
             return
         
-        logger.debug('Size: {}\tScale: {}'.format(size, scale))
         # TODO: Remove this debug nonsense
         img = Image.fromarray(numpy.array(self.terrain, dtype=float), mode='F')
         img.convert('RGB', dither=None).save('terrain_size_{}.png'.format(size))

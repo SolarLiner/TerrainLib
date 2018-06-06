@@ -6,17 +6,18 @@ from PIL import Image
 
 from terrainlib import reader, terrain
 
-logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', level=logging.DEBUG)
+logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
 
 
 def main():
-    terrain_gen = terrain.DiamondSquareGenerator(8, 0.3)
+    terrain_gen = terrain.DiamondSquareGenerator(6, 0.3)
     terr = terrain_gen()
     img_reader = reader.PILReader()
     img = img_reader(terr)
     with open('terrain_final.txt', mode='w') as f:
         f.write(repr(terr))
-    img.convert('L', dither=None).save('terrain_final.png')
+    img.convert('RGB').save('terrain_final.png')
+    img.convert('L').save('terrain_final_grey.png')
 
 if __name__ == '__main__':
     main()

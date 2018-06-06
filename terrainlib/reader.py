@@ -14,5 +14,4 @@ class TerrainReader(metaclass=abc.ABCMeta):
 class PILReader(TerrainReader):
     def __call__(self, terrain):
         arr = numpy.array(terrain._heightmap, dtype=float)
-        return Image.fromarray(arr, mode='F')
-        
+        return Image.fromarray(arr, 'F')
