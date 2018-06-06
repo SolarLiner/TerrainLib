@@ -17,3 +17,7 @@ source:
   artifacts:
     paths:
       - dist/*
+  only:
+    - master
+    - staging
+    - tags
