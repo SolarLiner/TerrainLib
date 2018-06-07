@@ -10,13 +10,6 @@ from PIL import Image
 logger = logging.getLogger(__name__)
 
 
-def clamp(value, bounds=(0,1)):
-    if bounds[0] > value:
-        return bounds[0]
-    if bounds[1] < value:
-        return bounds[1]
-    return value
-
 class Terrain:
     def __init__(self, size):
         self._size = size
@@ -43,11 +36,11 @@ class Terrain:
         res = Terrain(self.size)
         if isinstance(other, (int, float)):
             for x,y in product(range(self.size), repeat=2):
-                res[x,y] = clamp(self[x,y] + other)
+                res[x,y] = self[x,y] + other
             return res
         if isinstance(other, Terrain):
             for x,y in product(range(self.size), repeat=2):
-                res[x,y] = clamp(self[x,y] + other[x,y])
+                res[x,y] = self[x,y] + other[x,y]
             return res
         raise ArithmeticError("Type %s cannot add to type Terrain" % type(other).__name__)
 
@@ -57,7 +50,7 @@ class Terrain:
             return self + (-other)
         if isinstance(other, Terrain):
             for x,y in product(range(self.size), repeat=2):
-                res[x,y] = clamp(self[x,y] - other[x,y])
+                res[x,y] = self[x,y] - other[x,y]
             return res
         raise ArithmeticError("Type %s cannot subtract to type Terrain" % type(other).__name__)
 
@@ -65,11 +58,11 @@ class Terrain:
         res = Terrain(self.size)
         if isinstance(other, (int, float, bool)):
             for x,y in product(range(self.size), repeat=2):
-                res[x,y] = clamp(self[x,y] * other)
+                res[x,y] = self[x,y] * other
             return res
         if isinstance(other, Terrain):
             for x,y in product(range(self.size)):
-                res[x,y] = clamp(self[x,y] * other[x,y])
+                res[x,y] = self[x,y] * other[x,y]
             return res
         raise ArithmeticError("Type %s cannot multiply to type Terrain" % type(other).__name__)
 
@@ -88,7 +81,7 @@ class TerrainGenerator(metaclass=abc.ABCMeta):
 
 
 class DiamondSquareGenerator(TerrainGenerator):
-    def __init__(self, size, roughness):
+    def __init__(self, size: int, roughness: float):
         self.side_length = (2**size)+1
         self.terrain = [[0 for _ in range(self.side_length)] for _ in range(self.side_length)]
         self.roughness = roughness
@@ -193,6 +186,6 @@ class ImageGenerator(TerrainGenerator):
             bottom = (height + short_side) / 2
 
             cropped_img = image.crop((left, top, right, bottom))
-            self.data = numpy.divide(numpy.array(cropped_img), bitdepth) # type: numpy.ndarray
+            self.data = numpy.divide(numpy.array(cropped_img, order='F'), bitdepth) # type: numpy.ndarray
 
             return short_side
