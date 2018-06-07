@@ -83,7 +83,7 @@ class TerrainGenerator(metaclass=abc.ABCMeta):
 class DiamondSquareGenerator(TerrainGenerator):
     def __init__(self, size: int, roughness: float):
         self.side_length = (2**size)+1
-        self.grid = [[0 for _ in range(self.side_length)] for _ in range(self.side_length)]
+        self.grid = numpy.zeros((self.side_length, self.side_length)).tolist()
         self.roughness = roughness
 
     def __call__(self):
