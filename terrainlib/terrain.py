@@ -83,7 +83,7 @@ class TerrainGenerator(metaclass=abc.ABCMeta):
 class DiamondSquareGenerator(TerrainGenerator):
     def __init__(self, size: int, roughness: float):
         self.side_length = (2**size)+1
-        self.terrain = [[0 for _ in range(self.side_length)] for _ in range(self.side_length)]
+        self.grid = [[0 for _ in range(self.side_length)] for _ in range(self.side_length)]
         self.roughness = roughness
 
     def __call__(self):
@@ -93,19 +93,27 @@ class DiamondSquareGenerator(TerrainGenerator):
 
     def gen_terrain(self):
         terrain = Terrain(self.side_length)
-        minimum = min([min(l) for l in self.terrain])
-        maximum = max([max(l) for l in self.terrain]) - minimum
-        for y in range(self.side_length):
-            for x in range(self.side_length):
-                terrain[x,y] = (self.terrain[x][y] - minimum) / maximum
+        arr = numpy.array(self.grid)
+        minimum = numpy.min(arr)
+        maximum = numpy.max(arr) - minimum
+
+        arr = numpy.subtract(numpy.array(self.grid), minimum)
+        arr = numpy.divide(arr, maximum)
+
+        terrain._heightmap = arr.tolist()
         return terrain
 
     def divide(self, size: int):
         id = size // 2
-        scale = self.roughness * size
-        
         if id < 1:
             return
+        scale = self.roughness * size
+
+        # TODO: Remove this debug nonsense!
+        from .reader import PILReader
+        img_reader = PILReader(PILReader.BITDEPTH_8)
+        img = img_reader(self.gen_terrain())
+        img.save('terrain_out_{}.png'.format(size))
         
         # Squares
         for y in range(id, self.side_length-1, size):
@@ -122,31 +130,31 @@ class DiamondSquareGenerator(TerrainGenerator):
         self.divide(id)
 
     def square(self, x, y, size, offset):
-        tl = self.terrain[x-size][y-size]
-        tr = self.terrain[x-size][y+size]
-        br = self.terrain[x+size][y+size]
-        bl = self.terrain[x+size][y-size]
+        tl = self.grid[x-size][y-size]
+        tr = self.grid[x-size][y+size]
+        br = self.grid[x+size][y+size]
+        bl = self.grid[x+size][y-size]
 
         average = ((tl + tr + bl + br) / 4)
-        self.terrain[x][y] = average + offset
+        self.grid[x][y] = average + offset
 
     def diamond(self, x, y, size, offset):
-        t = self.terrain[x][y-size]
-        l = self.terrain[x+size][y]
-        b = self.terrain[x][y+size]
-        r = self.terrain[x-size][y]
+        t = self.grid[x][y-size]
+        l = self.grid[x+size][y]
+        b = self.grid[x][y+size]
+        r = self.grid[x-size][y]
 
         average = ((t+l+b+r)/4)
-        self.terrain[x][y] = average + offset
+        self.grid[x][y] = average + offset
 
     def setup_terrain(self):
         logger.debug('Setting up terrain size %i', self.side_length)
         maximum = self.side_length - 1
 
-        self.terrain[0][0] = random.uniform(-self.side_length, self.side_length)
-        self.terrain[maximum][0] = random.uniform(-self.side_length, self.side_length)
-        self.terrain[0][maximum] = random.uniform(-self.side_length, self.side_length)
-        self.terrain[maximum][maximum] = random.uniform(-self.side_length, self.side_length)
+        self.grid[0][0] = random.uniform(-self.side_length, self.side_length)
+        self.grid[maximum][0] = random.uniform(-self.side_length, self.side_length)
+        self.grid[0][maximum] = random.uniform(-self.side_length, self.side_length)
+        self.grid[maximum][maximum] = random.uniform(-self.side_length, self.side_length)
 
 
 class ImageGenerator(TerrainGenerator):
