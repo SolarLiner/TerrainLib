@@ -108,7 +108,7 @@ class DiamondSquareGenerator(TerrainGenerator):
         if id < 1:
             return
         scale = self.roughness * size
-
+        
         # Squares
         for y in range(id, self.side_length-1, size):
             for x in range(id, self.side_length-1, size):
@@ -123,7 +123,7 @@ class DiamondSquareGenerator(TerrainGenerator):
 
         self.divide(id)
 
-    def square(self, x, y, size, offset):
+    def square(self, x: int, y: int, size: int, offset: float):
         tl = self.grid[x-size][y-size]
         tr = self.grid[x-size][y+size]
         br = self.grid[x+size][y+size]
@@ -132,13 +132,13 @@ class DiamondSquareGenerator(TerrainGenerator):
         average = ((tl + tr + bl + br) / 4)
         self.grid[x][y] = average + offset
 
-    def diamond(self, x, y, size, offset):
+    def diamond(self, x: int, y: int, size: int, offset: float):
         t = self.grid[x][y-size]
         l = self.grid[x+size][y]
         b = self.grid[x][y+size]
         r = self.grid[x-size][y]
 
-        average = ((t+l+b+r)/4)
+        average = ((t+l+b+r)/4.0)
         self.grid[x][y] = average + offset
 
     def setup_terrain(self):
