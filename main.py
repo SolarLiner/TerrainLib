@@ -10,13 +10,10 @@ logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
 
 
 def main():
-    terrain_gen = terrain.DiamondSquareGenerator(8, 0.3)
-    terr = terrain_gen()
-    img_reader = reader.PILReader()
+    terr = terrain.ImageGenerator('data/terrain_input.png', terrain.ImageGenerator.BITDEPTH_16)
+    img_reader = reader.PILReader(reader.PILReader.BITDEPTH_8)
     img = img_reader(terr)
-    with open('terrain_final.txt', mode='w') as f:
-        f.write(repr(terr))
-    img.convert('RGB').save('terrain_final.png')
+    img.save('terrain_out.png')
     
 
 if __name__ == '__main__':
