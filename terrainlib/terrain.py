@@ -155,3 +155,34 @@ class DiamondSquareGenerator(TerrainGenerator):
         self.terrain[maximum][0] = random.uniform(-self.side_length, self.side_length)
         self.terrain[0][maximum] = random.uniform(-self.side_length, self.side_length)
         self.terrain[maximum][maximum] = random.uniform(-self.side_length, self.side_length)
+
+
+class ImageGenerator(TerrainGenerator):
+    def __init__(self, img):
+        if isinstance(img, str):
+            size = self._setup_image(Image.open(img))
+        elif isinstance(img, Image.Image):
+            size = self._setup_image
+        else:
+            raise TypeError("Image can only be a string or a PIL.Image instance.")
+
+        self.terrain = Terrain(size)
+
+    def __call__(self):
+        for x,y in product(range(self.terrain.size), repeat=2):
+            arr = numpy.divide(numpy.array(self.image), 255.0)
+            arr = numpy.reshape(arr, (self.terrain.size, self.terrain.size), 'F')
+            self.terrain._heightmap = arr.tolist()
+
+            return self.terrain
+
+    def _setup_image(self, image):
+        if isinstance(image, Image.Image):
+            width, height = image.size  # type: (int, int)
+            short_side = min(width, height)   # type: int
+            left = (width - short_side) / 2
+            right = (width + short_side) / 2
+            top = (height - short_side) / 2
+            bottom = (height + short_side) / 2
+            self.image = image.crop((left, top, right, bottom)).convert('L')
+            return short_side
