@@ -93,7 +93,6 @@ class DiamondSquareGenerator(TerrainGenerator):
 
     def gen_terrain(self):
         terrain = Terrain(self.side_length)
-        height_scale = self.side_length-1
         minimum = min([min(l) for l in self.terrain])
         maximum = max([max(l) for l in self.terrain]) - minimum
         for y in range(self.side_length):
@@ -111,14 +110,14 @@ class DiamondSquareGenerator(TerrainGenerator):
         # Squares
         for y in range(id, self.side_length-1, size):
             for x in range(id, self.side_length-1, size):
-                s_scale = random.uniform(-scale, scale)
-                self.square(x,y, id, s_scale)
+                s_offset = random.uniform(-scale, scale)
+                self.square(x,y, id, s_offset)
 
         # Diamonds
         for y in range(0, self.side_length-1, size):
             for x in range((y+id) % size, self.side_length-1, size):
-                d_scale = random.uniform(-scale, scale)
-                self.diamond(x,y, id, d_scale)
+                d_offset = random.uniform(-scale, scale)
+                self.diamond(x,y, id, d_offset)
 
         self.divide(id)
 
