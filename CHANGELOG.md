@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Image input to allow terrains from other programs to be imported, through PIL.
 
+### Changed
+
+- Image input and output are now bitdepth-aware (but must be selected manually)
+ Note that this is very much a hack and with some help, the issue opened upstream at PIL
+ will pick up and conversion be automatic and seamless.
+
 ## [0.0.1] - First test release (2018-06-06)
 
 ### Added

@@ -158,31 +158,41 @@ class DiamondSquareGenerator(TerrainGenerator):
 
 
 class ImageGenerator(TerrainGenerator):
-    def __init__(self, img):
+    BITDEPTH_FLOAT = 1
+    BITDEPTH_32 = 2**32-1
+    BITDEPTH_16 = 2**16-1
+    BITDEPTH_8 = 2**8-1
+
+    def __init__(self, img, bitdepth=BITDEPTH_16):
         if isinstance(img, str):
-            size = self._setup_image(Image.open(img))
+            size = self._setup_image(Image.open(img), bitdepth)
         elif isinstance(img, Image.Image):
             size = self._setup_image
         else:
             raise TypeError("Image can only be a string or a PIL.Image instance.")
 
+        if not bitdepth in [self.BITDEPTH_8, self.BITDEPTH_16, self.BITDEPTH_32, self.BITDEPTH_FLOAT]:
+            raise TypeError('Bitdepth should be a valid number')
+        self.bitdepth = bitdepth
+
         self.terrain = Terrain(size)
 
     def __call__(self):
-        for x,y in product(range(self.terrain.size), repeat=2):
-            arr = numpy.divide(numpy.array(self.image), 255.0)
-            arr = numpy.reshape(arr, (self.terrain.size, self.terrain.size), 'F')
-            self.terrain._heightmap = arr.tolist()
+        self.terrain._heightmap = self.data.tolist()
 
-            return self.terrain
+        return self.terrain
 
-    def _setup_image(self, image):
+    def _setup_image(self, image, bitdepth):
         if isinstance(image, Image.Image):
             width, height = image.size  # type: (int, int)
             short_side = min(width, height)   # type: int
+
             left = (width - short_side) / 2
             right = (width + short_side) / 2
             top = (height - short_side) / 2
             bottom = (height + short_side) / 2
-            self.image = image.crop((left, top, right, bottom)).convert('L')
+
+            cropped_img = image.crop((left, top, right, bottom))
+            self.data = numpy.divide(numpy.array(cropped_img), self.bitdepth) # type: numpy.ndarray
+
             return short_side
