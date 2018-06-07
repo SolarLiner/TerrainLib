@@ -111,43 +111,44 @@ class DiamondSquareGenerator(TerrainGenerator):
         # Squares
         for y in range(id, self.side_length-1, size):
             for x in range(id, self.side_length-1, size):
-                s_offset = random.uniform(-scale, scale)
-                self.square(x,y, id, s_offset)
+                self.square(x,y, id, scale)
 
         # Diamonds
         for y in range(0, self.side_length-1, size):
-            for x in range((y+id) % size, self.side_length-1, size):
-                d_offset = random.uniform(-scale, scale)
-                self.diamond(x,y, id, d_offset)
+            for x in range(0, self.side_length-1, size):
+                self.diamond(x+id,y, id, scale)
+                self.diamond(x,y+id, id, scale)
 
         self.divide(id)
 
-    def square(self, x: int, y: int, size: int, offset: float):
+    def square(self, x: int, y: int, size: int, scale: float):
         tl = self.terrain[x-size,y-size]
         tr = self.terrain[x-size,y+size]
         br = self.terrain[x+size,y+size]
         bl = self.terrain[x+size,y-size]
 
         average = ((tl + tr + bl + br) / 4)
+        offset = random.uniform(-scale, scale)        
         self.terrain[x,y] = average + offset
 
-    def diamond(self, x: int, y: int, size: int, offset: float):
+    def diamond(self, x: int, y: int, size: int, scale: float):
         t = self.terrain[x,y-size]
         l = self.terrain[x+size,y]
         b = self.terrain[x,y+size]
         r = self.terrain[x-size,y]
 
         average = ((t+l+b+r)/4.0)
+        offset = random.uniform(-scale, scale)
         self.terrain[x,y] = average + offset
 
     def setup_terrain(self):
         logger.debug('Setting up terrain size %i', self.side_length)
         maximum = self.side_length - 1
 
-        self.terrain[0,0] = random.uniform(-self.side_length, self.side_length)
-        self.terrain[maximum,0] = random.uniform(-self.side_length, self.side_length)
-        self.terrain[0,maximum] = random.uniform(-self.side_length, self.side_length)
-        self.terrain[maximum,maximum] = random.uniform(-self.side_length, self.side_length)
+        # self.terrain[0,0] = random.uniform(-self.side_length, self.side_length)
+        # self.terrain[maximum,0] = random.uniform(-self.side_length, self.side_length)
+        # self.terrain[0,maximum] = random.uniform(-self.side_length, self.side_length)
+        # self.terrain[maximum,maximum] = random.uniform(-self.side_length, self.side_length)
 
 
 class ImageGenerator(TerrainGenerator):

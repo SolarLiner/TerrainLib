@@ -12,7 +12,7 @@ class TerrainReader(metaclass=abc.ABCMeta):
 
 
 class PILReader(TerrainReader):
-    BITDEPTH_FLOAT = (1, 'F', float)
+    BITDEPTH_FLOAT = (1., 'F', float)
     BITDEPTH_32 = (2**32-1, 'I', 'uint32')
     BITDEPTH_16 = (2**16-1, 'I', 'uint16')
     BITDEPTH_8 = (2**8-1, 'L', 'uint8')

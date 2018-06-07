@@ -9,12 +9,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Image input to allow terrains from other programs to be imported, through PIL.
+- Thermal erosion
 
 ### Changed
 
 - Image input and output are now bitdepth-aware (but must be selected manually)
  Note that this is very much a hack and with some help, the issue opened upstream at PIL
  will pick up and conversion be automatic and seamless.
+- Diamond Square generator now works and is fabulous!
+
+### Known bugs
+
+- PILReader will choke on 16bit output for some reason, PIL saying there is "not enough image data". All other supported bitdepths are fine, however.
 
 ## [0.0.1] - First test release (2018-06-06)
 
