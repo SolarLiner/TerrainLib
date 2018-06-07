@@ -163,7 +163,7 @@ class ImageGenerator(TerrainGenerator):
     BITDEPTH_16 = 2**16-1
     BITDEPTH_8 = 2**8-1
 
-    def __init__(self, img, bitdepth=BITDEPTH_16):
+    def __init__(self, img, bitdepth):
         if isinstance(img, str):
             size = self._setup_image(Image.open(img), bitdepth)
         elif isinstance(img, Image.Image):

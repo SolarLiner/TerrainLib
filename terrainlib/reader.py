@@ -17,11 +17,11 @@ class PILReader(TerrainReader):
     BITDEPTH_16 = 2**16-1
     BITDEPTH_8 = 2**8-1
     
-    def __init__(self, bitdepth=BITDEPTH_16):
+    def __init__(self, bitdepth):
         if not bitdepth in [self.BITDEPTH_8, self.BITDEPTH_16, self.BITDEPTH_32, self.BITDEPTH_FLOAT]:
             raise TypeError('Bitdepth should be a valid number')
         self.bitdepth = bitdepth
 
     def __call__(self, terrain):
         arr = numpy.array(terrain._heightmap, dtype=float)
-        return Image.fromarray(numpy.multiply(arr, self.bitdepth, 'F')
+        return Image.fromarray(numpy.multiply(arr, self.bitdepth, 'F'))
