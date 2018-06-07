@@ -164,16 +164,16 @@ class ImageGenerator(TerrainGenerator):
     BITDEPTH_8 = 2**8-1
 
     def __init__(self, img, bitdepth):
-        if isinstance(img, str):
-            size = self._setup_image(Image.open(img), bitdepth)
-        elif isinstance(img, Image.Image):
-            size = self._setup_image
-        else:
-            raise TypeError("Image can only be a string or a PIL.Image instance.")
-
         if not bitdepth in [self.BITDEPTH_8, self.BITDEPTH_16, self.BITDEPTH_32, self.BITDEPTH_FLOAT]:
             raise TypeError('Bitdepth should be a valid number')
         self.bitdepth = bitdepth
+
+        if isinstance(img, str):
+            size = self._setup_image(Image.open(img), bitdepth)
+        elif isinstance(img, Image.Image):
+            size = self._setup_image(img, bitdepth)
+        else:
+            raise TypeError("Image can only be a string or a PIL.Image instance.")
 
         self.terrain = Terrain(size)
 
@@ -193,6 +193,6 @@ class ImageGenerator(TerrainGenerator):
             bottom = (height + short_side) / 2
 
             cropped_img = image.crop((left, top, right, bottom))
-            self.data = numpy.divide(numpy.array(cropped_img), self.bitdepth) # type: numpy.ndarray
+            self.data = numpy.divide(numpy.array(cropped_img), bitdepth) # type: numpy.ndarray
 
             return short_side
