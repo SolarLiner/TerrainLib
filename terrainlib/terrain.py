@@ -109,12 +109,6 @@ class DiamondSquareGenerator(TerrainGenerator):
             return
         scale = self.roughness * size
 
-        # TODO: Remove this debug nonsense!
-        from .reader import PILReader
-        img_reader = PILReader(PILReader.BITDEPTH_8)
-        img = img_reader(self.gen_terrain())
-        img.save('terrain_out_{}.png'.format(size))
-        
         # Squares
         for y in range(id, self.side_length-1, size):
             for x in range(id, self.side_length-1, size):
