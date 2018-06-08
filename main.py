@@ -4,17 +4,20 @@ from itertools import product
 import numpy
 from PIL import Image
 
-from terrainlib import reader, terrain, filters
+from terrainlib.generators.procedural import DiamondSquareGenerator
+from terrainlib.generators.image import PILInputGenerator
+from terrainlib.filters.erosion import ThermalErosionFilter, HydraulicErosionFilter
+from terrainlib.readers.image import PILImageReader
 
 logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
 
 
 def main():
-    # generator = terrain.DiamondSquareGenerator(10, 0.5)
-    generator = terrain.ImageGenerator('data/terrain_in.png', terrain.ImageGenerator.BITDEPTH_8)
-    hydrerode = filters.HydraulicErosionFilter(100)
-    thermal_erode = filters.ThermalErosionFilter(500)
-    img_reader = reader.PILReader(reader.PILReader.BITDEPTH_8)
+    # generator = DiamondSquareGenerator(10, 0.5)
+    generator = PILInputGenerator('data/terrain_in.png', PILInputGenerator.BITDEPTH_8)
+    hydrerode = HydraulicErosionFilter(100)
+    thermal_erode = ThermalErosionFilter(500)
+    img_reader = PILImageReader(PILImageReader.BITDEPTH_8)
 
     terr = hydrerode(generator())
     img_reader(terr).save('terrain_out_hydrolic.png')
