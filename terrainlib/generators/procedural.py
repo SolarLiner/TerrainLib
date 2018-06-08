@@ -53,7 +53,7 @@ class DiamondSquareGenerator(TerrainGenerator):
         """
         self.side_length = (2**size)+1
         self.terrain = Terrain(self.side_length)
-        self.roughness = roughness
+        self.roughness = min(1., max(0.001, roughness))
 
     def __call__(self):
         """Generates the terrain. Takes no additional arguments, as all input parameters have been set in the init call.
