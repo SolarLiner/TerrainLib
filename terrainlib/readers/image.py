@@ -21,7 +21,7 @@ from .base import TerrainReader
 from ..terrain import Terrain
 
 
-class PILReader(TerrainReader):
+class PILImageReader(TerrainReader):
     """Export terrain as a greyscale ``PIL.Image`` instance."""
     BITDEPTH_FLOAT = (1., 'F', float)
     BITDEPTH_32 = (2**32-1, 'I', 'uint32')
