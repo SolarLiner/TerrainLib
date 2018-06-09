@@ -11,6 +11,7 @@ rope = "*"
 [packages]
 numpy = "*"
 pillow = "*"
+numexpr = "*"
 
 [requires]
 python_version = "3.6"

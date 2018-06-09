@@ -20,6 +20,7 @@ import logging
 from itertools import product
 
 import numpy
+import numexpr
 
 from ..terrain import Terrain
 from .base import TerrainFilter
@@ -89,40 +90,55 @@ class HydraulicErosionFilter(TerrainFilter):
 
         :param terrain: Terrain object to apply erosion to.
         :returns: new Terrain object with erosion applied"""
-        heights = numpy.array(terrain._heightmap)
-        shape = heights.shape
+        h = numpy.array(terrain._heightmap)
+        shape = h.shape
         difference = numpy.zeros(shape)
-        sediment = numpy.zeros(shape)
-        water = numpy.zeros(shape)
+        m = numpy.zeros(shape)
+        w = numpy.zeros(shape)
+
+        nsew = (north,east,south,west)
 
         for i in range(self.iterations):
             logger.info('Hydraulic erosion %.1f%%', 100*i/self.iterations)
+
             # Step 1: rainfall
-            water += self.rainfall
+            w += self.rainfall
+
             # Step 2: erosion
-            heights -= self.solubility
-            sediment += self.solubility
+            h -= self.solubility
+            m += self.solubility
+
             # Step 3: movement
-            grad_x, grad_y = numpy.gradient(heights+water)
-            for x,y in product(range(terrain.size), repeat=2):  # TODO: Thread the sh*t out of this
-                water_height = (heights+water)[x,y]
-                neighbor = (x + sign(grad_x[x,y]), y + sign(grad_y[x,y]))
+            a = numpy.add(w, h)
+            avg_a = numpy.divide(numpy.sum([dir(a) for dir in nsew]), 4.0)
+            delta_a = numpy.subtract(a, avg_a)
 
-                if (x,y) == neighbor:   # Only continue if the water needs to go somewhere
-                    continue
-                water_height_nbr = (heights+water)[neighbor]
+            d_i = [(a - dir(a)) for dir in nsew]
+            d_tot = numpy.sum(numpy.where(numexpr.evaluate('d_i > 0'), d_i, 0), 2)
 
-                water[neighbor] += water[x,y]
-                water[x,y] = 0
+            delta_mi = []
+            for i in range(4):
+                d = d_i[i]
+                delta_wi = numpy.multiply(numpy.divide(d, d_tot), numpy.min(w, delta_a))
+                delta_mi.append(numpy.multiply(m, numpy.divide(delta_wi, w)))
+
+            for i in range(4):
+                dir = nsew[i]
+                m += dir(delta_mi[(i+2)%4])
+
             # Step 4: evaporation
-            water *= 1 - self.evaporation
-            difference = numpy.maximum(self.capacity - sediment, numpy.zeros(shape))
-            sediment -= difference
-            heights += difference
+            w *= 1 - self.evaporation
+            difference = numpy.maximum(self.capacity - m, numpy.zeros(shape))
+            m -= difference
+            h += difference
 
-        self.sediments_map = sediment
-        self.water_map = water
+        self.sediments_map = m
+        self.water_map = w
         self.difference_map = difference
+
+        new_terrain = Terrain(terrain.size)
+        new_terrain._heightmap = h.tolist()
+        return new_terrain
 
 
 class ThermalErosionFilter(TerrainFilter):
