@@ -1,3 +1,5 @@
+image: python:3.6.5
+
 cache:
   paths:
     - .cache/pip
@@ -11,12 +13,13 @@ before_script:
   - export LC_ALL=C.UTF-8; export LANG=C.UTF-8 # Pipenv/Click text encoding mitigation. See http://click.pocoo.org/5/python3/
   - pipenv install --dev
 
-source:
+terrainlib:
   script:
     - python setup.py sdist --formats=gztar,zip
   artifacts:
     paths:
-      - dist/*
+      - dist/*.zip
+      - dist/*.gz
   only:
     - master
     - staging
