@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Image input to allow terrains from other programs to be imported, through PIL.
+- Image input to allow terrains from other programs to be imported, through PIL
+- Voronoi generator
 - Thermal erosion
 
 ### Changed
