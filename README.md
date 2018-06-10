@@ -57,4 +57,5 @@ for examples of implementation.
 ## License
 
 This project is licensed under a GNU LGPLv3 license. Non open-source, commercial
-projects are welcomed, but should ask for explicit licensing agreement.
+projects are welcomed, but should ask for explicit licensing agreement.  
+See the [license file](LICENSE) for more information.
