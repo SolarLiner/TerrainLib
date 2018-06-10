@@ -141,3 +141,33 @@ class DiamondSquareGenerator(TerrainGenerator):
         self.terrain[maximum,0] = random.uniform(-self.side_length, self.side_length)
         self.terrain[0,maximum] = random.uniform(-self.side_length, self.side_length)
         self.terrain[maximum,maximum] = random.uniform(-self.side_length, self.side_length)
+
+
+class VoronoiGenerator(TerrainGenerator):
+    """a Voronoi diagram is a partitioning of a plane into regions based on distance to points in a specific subset of
+    the plane. That set of points (called seeds, sites, or generators) is specified beforehand, and for each seed there
+    is a corresponding region consisting of all points closer to that seed than to any other. These regions are called
+    Voronoi cells.
+
+    Source: https://en.wikipedia.org/wiki/Voronoi_diagram"""
+
+    def __init__(self, size):
+        self.terrain = Terrain(size)
+
+    def __call__(self, points: list):
+        depthmap = numpy.ones(shape=(self.terrain.size, self.terrain.size), dtype=float)*1e308
+        points = tuple(numpy.round(points).tolist())
+
+        def hypot(X,Y):
+            return (X-x)**2 + (Y-y)**2
+        
+        for i,(x,y) in enumerate(points):
+            logger.info('%i %% - Generating Voronoi diagram', 100*i/len(points))
+            logger.debug('(%i,%i)', x,y)
+            para = numpy.fromfunction(hypot, depthmap.shape)
+            depthmap = numpy.where(para < depthmap, para, depthmap)
+
+        maximum = numpy.max(depthmap)
+        self.terrain._heightmap = numpy.divide(depthmap, maximum).tolist()
+        return self.terrain
+
