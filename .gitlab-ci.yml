@@ -29,8 +29,8 @@ pages:
 pdf-doc:
   image: debian:latest
   before_script:
-    - apt-get update
-    - apt-get install texlive latexmk
+    - apt-get update -qq
+    - apt-get install texlive latexmk -yqq
   script:
     - make latex
     - cd docs/latex
