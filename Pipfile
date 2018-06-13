@@ -9,6 +9,7 @@ pylint = "*"
 rope = "*"
 nose = "*"
 coverage = "*"
+sphinx = "*"
 
 [packages]
 numpy = "*"
