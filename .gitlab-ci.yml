@@ -22,7 +22,7 @@ docs-html:
   script:
     - make html
   artifacts:
-    path:
+    paths:
       - docs/html/
     name: HTML Documentation
 
@@ -37,6 +37,7 @@ docs-latex:
   artifacts:
     paths:
       -docs/latex/*
+    name: PDF Documentation
 
 terrainlib:
   script:
