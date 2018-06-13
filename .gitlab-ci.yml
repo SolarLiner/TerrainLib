@@ -8,6 +8,7 @@ cache:
 before_script:
   - pip install pipenv
   - ls -alh
+  - if [ -d "venv" ] virtualenv venv
   - source venv/bin/activate
   - export LC_ALL=C.UTF-8; export LANG=C.UTF-8 # Pipenv/Click text encoding mitigation. See http://click.pocoo.org/5/python3/
   - pipenv install --dev
@@ -28,6 +29,7 @@ docs-html:
 docs-latex:
   image: debian:latest
   before_script:
+    - apt-get update
     - apt-get install texlive latexmk
   script:
     - make latex
