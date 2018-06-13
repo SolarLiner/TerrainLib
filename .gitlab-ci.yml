@@ -30,7 +30,7 @@ pdf-doc:
   image: debian:latest
   before_script:
     - apt-get update -qq
-    - apt-get install texlive latexmk -yqq
+    - apt-get install texlive latexmk make -yqq
   script:
     - make latex
     - cd docs/latex
