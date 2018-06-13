@@ -193,3 +193,17 @@ class ThermalErosionFilter(TerrainFilter):
         
         arr = heights - sum(nsew) * (self.erosion / 8.0)
         return arr
+
+
+class StrataFilter(TerrainFilter):
+
+    def __init__(self, number=5.0):
+        self.levels = float(max(2., number))
+
+    def __call__(self, terrain: Terrain):
+        heights = numpy.multiply(terrain._heightmap, self.levels)
+
+        new_terrain = Terrain(terrain.size)
+        new_terrain._heightmap = numpy.divide(numpy.around(heights), self.levels)
+
+        return new_terrain
