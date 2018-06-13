@@ -40,13 +40,15 @@ class DiamondSquareGenerator(TerrainGenerator):
 
     Source: https://en.wikipedia.org/wiki/Diamond-square_algorithm"""
 
-    def __init__(self, size: int, roughness: float):
+    def __init__(self, size: int, roughness: float, seed=None):
         """Initialize the Diamond Square generator.
 
         :param size: As Diamond Square needs a `2**n+1` sized grid, the size is simply the exponent of the power of two.
         :param roughness: Fraction of the size of the square at each iteration, that will be used as bounds for the
         random offset. Traditional values sit between 0.01 for flat landscapes, to 0.3 for rough hills. Anything above
         will produce unrealistic terrain and should only be used for abstract art.
+        :param seed: Reproduce results by setting the same seed for each generation. Seed can be any type, as it will be
+        passed down to `random.seed()`.
 
         :Example:
         ``generator = DiamondSquareGenerator(10, 0.1)   # Generates a 1025-sized grid with roughness of 0.1``
@@ -54,6 +56,8 @@ class DiamondSquareGenerator(TerrainGenerator):
         self.side_length = (2**size)+1
         self.terrain = Terrain(self.side_length)
         self.roughness = min(1., max(0.001, roughness))
+        if seed is not None:
+            random.seed(seed)
 
     def __call__(self):
         """Generates the terrain. Takes no additional arguments, as all input parameters have been set in the init call.
