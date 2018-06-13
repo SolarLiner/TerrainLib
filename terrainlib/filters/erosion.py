@@ -43,6 +43,18 @@ def west(matrix):
     """Return a matrix moved one line west, wrapping around the grid."""
     return numpy.concatenate((matrix[:,1:], matrix[:,:1]), 1)
 
+def north_east(matrix):
+    return east(north(matrix))
+
+def north_west(matrix):
+    return west(north(matrix))
+
+def south_west(matrix):
+    return west(south(matrix))
+
+def south_east(matrix):
+    return east(south(matrix))
+
 def sign(x, bias=0.001):
     """Returns the sign of the number, with bias."""
     if x < bias:
@@ -176,8 +188,8 @@ class ThermalErosionFilter(TerrainFilter):
         """Erode once. Should not be called directly.
 
         :param heights: 2D numpy array containing the heights of the terrain at each grid point."""
-        nsew = [(heights - x(heights)).clip(0., 1.) for x in (north, east, south, west)]
+        nsew = [(heights - x(heights)).clip(0., 1.) for x in (north, north_east, east, south_east, south, south_west, west)]
         nsew = [(x - x.clip(-self.talus, self.talus)) for x in nsew]
         
-        arr = heights - sum(nsew) * (self.erosion / 4.0)
+        arr = heights - sum(nsew) * (self.erosion / 8.0)
         return arr
