@@ -40,13 +40,14 @@ pdf-doc:
       - docs/latex/*.pdf
     name: PDF Documentation
 
-terrainlib:
+build:
   script:
     - python setup.py sdist --formats=gztar,zip
   artifacts:
     paths:
       - dist/*.zip
       - dist/*.gz
+    name: Source distribution
   only:
     - master
     - staging
