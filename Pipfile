@@ -7,6 +7,8 @@ name = "pypi"
 pylint = "*"
 "autopep8" = "*"
 rope = "*"
+nose = "*"
+coverage = "*"
 
 [packages]
 numpy = "*"
