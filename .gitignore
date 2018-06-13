@@ -108,3 +108,6 @@ terrain_*.png
 terrain_final.txt
 .vscode/settings.json
 /.gtm/
+
+# Documentation
+docs

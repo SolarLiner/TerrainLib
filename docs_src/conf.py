@@ -24,7 +24,7 @@ copyright = '2018, Nathan Graule'
 author = 'Nathan Graule'
 
 # The short X.Y version
-version = ''
+version = '0.1'
 # The full version, including alpha/beta/rc tags
 release = '0.0.1'
 
@@ -54,8 +54,8 @@ templates_path = ['_templates']
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
-# source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+# source_suffix = '.rst'
+source_suffix = ['.rst', '.md']
 
 # The master toctree document.
 master_doc = 'index'
@@ -116,15 +116,16 @@ htmlhelp_basename = 'TerrainLibdoc'
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
     #
-    # 'papersize': 'letterpaper',
+    'papersize': 'a4paper',
 
     # The font size ('10pt', '11pt' or '12pt').
     #
-    # 'pointsize': '10pt',
+    'pointsize': '10pt',
 
     # Additional stuff for the LaTeX preamble.
     #
-    # 'preamble': '',
+    'preamble': 'The TerrainLib project aims at providing simple to use, and fast algorithms that can not only be '
+        're-used in other projects, but also be used by end users as the library is easy to use.',
 
     # Latex figure (float) alignment
     #
