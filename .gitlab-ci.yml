@@ -18,15 +18,15 @@ test:
     - nosetests tests --with-coverage
   coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
 
-docs-html:
+pages:
   script:
     - make html
   artifacts:
     paths:
-      - docs/html/
+      - docs/html
     name: HTML Documentation
 
-docs-latex:
+pdf-doc:
   image: debian:latest
   before_script:
     - apt-get update
@@ -37,7 +37,7 @@ docs-latex:
     - make
   artifacts:
     paths:
-      - docs/latex/*
+      - docs/latex/*.pdf
     name: PDF Documentation
 
 terrainlib:
