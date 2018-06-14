@@ -104,7 +104,7 @@ extensions.append('guzzle_sphinx_theme')
 html_static_path = ['_static']
 
 html_theme_options = {
-    'project_nav_name': 'TerrainLib'
+    'project_nav_name': '{} {}'.format(project, version)
 }
 
 
