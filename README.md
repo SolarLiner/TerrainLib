@@ -1,4 +1,4 @@
-# TerrainLib
+# ![TerrainLib](docs_src/_static/type.png)
 
 A fast, modular library to generate landscapes.
 
