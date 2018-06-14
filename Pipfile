@@ -11,6 +11,7 @@ nose = "*"
 coverage = "*"
 sphinx = "*"
 recommonmark = "*"
+codacy-coverage = "*"
 
 [packages]
 numpy = "*"
