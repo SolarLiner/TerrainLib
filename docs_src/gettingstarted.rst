@@ -47,23 +47,38 @@ A first pipeline
 ----------------
 
 Start off by importing the Diamond Square generator. This is a fast noise generation alrogithm that can output detailed
-terrain fast - at the cost of not being tile-able.::
+terrain fast - at the cost of not being tile-able.
+
+.. code-block:: python
+   :linenos:
 
     from terrainlib.generators.procedural import DiamondSquareGenerator
 
 The output of that generator will be either too flat or too rough for the terrain to be interesting or even somewhat
 realistic. To smooth things out, we need to simulate the process by which rocks and dirt fall downhill.  
-We need some thermal erosion.::
+We need some thermal erosion:
+
+.. code-block:: python
+   :linenos:
+   :lineno-start: 2
 
     from terrainlib.filters.erosion import ThermalErosionFilter
 
 Last, but not least, we need to export that terrain somewhere. The best way to do that is through an image - it's easily
 visualisable, and can be imported anywhere really. Load up the Image exporter:
 
+.. code-block:: python
+   :linenos:
+   :lineno-start: 3
+
     from terrainlib.readers.image import PILImageReader
 
 Now, we need to initialize those. We're going to create a 1025 pixel wide terrain, with a decent amount of roughness,
-then apply 150 iterations of erosion at standard rates, and then export it to 'terrain_out.png' as a 16-bit image.::
+then apply 150 iterations of erosion at standard rates, and then export it to 'terrain_out.png' as a 16-bit image.
+
+.. code-block:: python
+   :linenos:
+   :lineno-start: 4
 
     generator = DiamondSquareGenerator(10, 0.1)
     erosion = ThermalErosionFilter(150)
@@ -79,7 +94,11 @@ Couple of things to notice:
 * We aren't providing a filename to the reader *directly*, because the reader outputs a Pillow image. The actual file
   will be saved from the `PIL.Image` instance.
 
-Now, let's setup our pipeline::
+Now, let's setup our pipeline:
+
+.. code-block:: python
+   :linenos:
+   :lineno-start: 9
 
     terrain = erosion(generator())
     img = img_reader(terrain)
@@ -88,8 +107,10 @@ Now, let's setup our pipeline::
 If you run your script, and after some processing time, it will have created a file named 'terrain_out.png' with the 
 terrain saved in it. If you open that image as a heightfield, you will see your image in all its glory!
 
-Here is the whole script::
-    :linenos:
+Here is the whole script:
+
+.. code-block:: python
+   :linenos:
 
     from terrainlib.generators.procedural import DiamondSquareGenerator
     from terrainlib.filters.erosion import ThermalErosionFilter
