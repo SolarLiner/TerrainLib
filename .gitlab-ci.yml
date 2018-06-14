@@ -32,7 +32,7 @@ test:
 pages:
   stage: build
   script:
-    - sphinx-apidoc -o docs_src/dapi terrainlib
+    - sphinx-apidoc -o docs_src/api terrainlib
     - make html
     - cp -r docs/html/ public/
   artifacts:
