@@ -11,7 +11,6 @@ stages:
 
 before_script:
   - pip install pipenv
-  - ls -alh
   - if [ ! -d "venv" ]; then virtualenv venv; fi
   - source venv/bin/activate
   - export LC_ALL=C.UTF-8; export LANG=C.UTF-8 # Pipenv/Click text encoding mitigation. See http://click.pocoo.org/5/python3/
@@ -43,7 +42,9 @@ pdf-doc:
   before_script:
     - apt-get update -qq
     - apt-get install texlive latexmk make -yqq
-    - pipenv install --system --dev
+    - source venv/bin/activate
+    - export LC_ALL=C.UTF-8; export LANG=C.UTF-8 # Pipenv/Click text encoding mitigation. See http://click.pocoo.org/5/python3/
+    - pipenv install --dev
   script:
     - make latex
     - cd docs/latex
