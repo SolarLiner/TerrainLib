@@ -20,5 +20,5 @@ import abc
 class TerrainFilter(metaclass=abc.ABCMeta):
     """Modifies a Terrain object."""
     @abc.abstractmethod
-    def __call__(self, terrain):
+    def __call__(self, terrain, *args, **kwargs):
         """Apply transform onto the terrain. Must output terrain afterwards."""
