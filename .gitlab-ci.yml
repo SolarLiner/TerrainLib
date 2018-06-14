@@ -25,6 +25,7 @@ test:
     - python-codacy-coverage -r coverage.xml
   coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
   allow_failure: true
+  when: always
 
 pages:
   stage: build
@@ -41,7 +42,8 @@ pdf-doc:
   image: debian:latest
   before_script:
     - apt-get update -qq
-    - apt-get install texlive latexmk make -yqq
+    - apt-get install texlive latexmk make python3 python3-pip -yqq
+    - pip3 install pipenv
     - source venv/bin/activate
     - export LC_ALL=C.UTF-8; export LANG=C.UTF-8 # Pipenv/Click text encoding mitigation. See http://click.pocoo.org/5/python3/
     - pipenv install --dev
