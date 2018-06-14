@@ -37,25 +37,6 @@ pages:
       - public
     name: HTML Documentation
 
-pdf-doc:
-  stage: build
-  image: debian:latest
-  before_script:
-    - apt-get update -qq
-    - apt-get install texlive latexmk make python3 python3-pip -yqq
-    - pip3 install pipenv
-    - source venv/bin/activate
-    - export LC_ALL=C.UTF-8; export LANG=C.UTF-8 # Pipenv/Click text encoding mitigation. See http://click.pocoo.org/5/python3/
-    - pipenv install --dev
-  script:
-    - make latex
-    - cd docs/latex
-    - make
-  artifacts:
-    paths:
-      - docs/latex/*.pdf
-    name: PDF Documentation
-
 build:
   stage: build
   script:
