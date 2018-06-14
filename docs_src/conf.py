@@ -89,6 +89,7 @@ pygments_style = 'sphinx'
 import guzzle_sphinx_theme
 
 html_theme = 'guzzle_sphinx_theme'
+html_theme_path = guzzle_sphinx_theme.html_theme_path()
 extensions.append('guzzle_sphinx_theme')
 
 # Theme options are theme-specific and customize the look and feel of a theme
