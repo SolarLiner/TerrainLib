@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "5b95686d8963c78b34a92009027460980bfa24d84a6822784f72cbf1623450c0"
+            "sha256": "fe7b5527515fe85a09645ec30b78cc0c001d4e2e17d5f721f9423ae386175438"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -231,6 +231,13 @@
             ],
             "version": "==0.14"
         },
+        "guzzle-sphinx-theme": {
+            "hashes": [
+                "sha256:9b8c1639c343c02c3f3db7df660ddf6f533b5454ee92a5f7b02edaa573fed3e6"
+            ],
+            "index": "pypi",
+            "version": "==0.7.11"
+        },
         "idna": {
             "hashes": [
                 "sha256:156a6814fb5ac1fc6850fb002e0852d56c0c8d2531923a51032d1b70760e186e",
@@ -375,10 +382,10 @@
         },
         "requests": {
             "hashes": [
-                "sha256:421cfc8d9dde7d6aff68196420afd86b88c65d77d8da9cf83f4ecad785d7b9d6",
-                "sha256:cc408268d0e21589bcc2b2c248e42932b8c4d112f499c12c92e99e2178a6134c"
+                "sha256:63b52e3c866428a224f97cab011de738c36aec0185aa91cfacd418b5d58911d1",
+                "sha256:ec22d826a36ed72a7358ff3fe56cbd4ba69dd7a6718ffd450ff0e9df7a47ce6a"
             ],
-            "version": "==2.19.0"
+            "version": "==2.19.1"
         },
         "rope": {
             "hashes": [

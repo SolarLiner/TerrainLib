@@ -12,6 +12,7 @@ coverage = "*"
 sphinx = "*"
 recommonmark = "*"
 codacy-coverage = "*"
+guzzle-sphinx-theme = "*"
 
 [packages]
 numpy = "*"

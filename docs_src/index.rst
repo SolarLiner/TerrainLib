@@ -29,6 +29,7 @@ TerrainLib is available on PyPi, therefore the easiest way to install it is the 
     pip install TerrainLib
 
 You can also install the library by downloading a version over the `GitLab project home`_.
+
 .. _GitLab project home: https://gitlab.com/solarliner/terrainlib
 
 
@@ -88,12 +89,12 @@ then apply 150 iterations of erosion at standard rates, and then export it to 't
 Couple of things to notice:
 
 * Due to the way the Diamond Square algorithm works, we do not enter the desired size directly, but the power of two
-that will result in the desired size. Here, we're taking the 10th power of two (2^10 = 1024), and the algorithm adds one
-to that number (this is a technical restriction, the algorithm needs a center pixel to work with, needing an odd number
-of pixels on the side). Thus, we get a 1025 pixel wide terrain.
+  that will result in the desired size. Here, we're taking the 10th power of two (2^10 = 1024), and the algorithm adds one
+  to that number (this is a technical restriction, the algorithm needs a center pixel to work with, needing an odd number
+  of pixels on the side). Thus, we get a 1025 pixel wide terrain.
 
 * We aren't providing a filename to the reader *directly*, because the reader outputs a Pillow image. The actual file
-will be saved from the `PIL.Image` instance.
+  will be saved from the `PIL.Image` instance.
 
 Now, let's setup our pipeline::
 
