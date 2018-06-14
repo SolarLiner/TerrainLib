@@ -75,7 +75,7 @@ We need some thermal erosion.::
     from terrainlib.filters.erosion import ThermalErosionFilter
 
 Last, but not least, we need to export that terrain somewhere. The best way to do that is through an image - it's easily
-visualizable, and can be imported anywhere really. Load up the Image exporter:
+visualisable, and can be imported anywhere really. Load up the Image exporter:
 
     from terrainlib.readers.image import PILImageReader
 
@@ -89,9 +89,9 @@ then apply 150 iterations of erosion at standard rates, and then export it to 't
 Couple of things to notice:
 
 * Due to the way the Diamond Square algorithm works, we do not enter the desired size directly, but the power of two
-  that will result in the desired size. Here, we're taking the 10th power of two (2^10 = 1024), and the algorithm adds one
-  to that number (this is a technical restriction, the algorithm needs a center pixel to work with, needing an odd number
-  of pixels on the side). Thus, we get a 1025 pixel wide terrain.
+  that will result in the desired size. Here, we're taking the 10th power of two (2^10 = 1024), and the algorithm adds
+  one to that number (this is a technical restriction, the algorithm needs a center pixel to work with, needing an odd
+  number of pixels on the side). Thus, we get a 1025 pixel wide terrain.
 
 * We aren't providing a filename to the reader *directly*, because the reader outputs a Pillow image. The actual file
   will be saved from the `PIL.Image` instance.
