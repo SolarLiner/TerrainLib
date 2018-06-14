@@ -32,6 +32,7 @@ test:
 pages:
   stage: build
   script:
+    - cd docs_src && sphinx-apidoc -o api ../terrainlib
     - make html
     - cp -r docs/html/ public/
   artifacts:

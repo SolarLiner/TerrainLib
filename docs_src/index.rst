@@ -26,7 +26,7 @@ licensing agreement.
    :caption: Contents:
 
    gettingstarted
-   reference
+   api/modules
 
 Indices and tables
 ==================
