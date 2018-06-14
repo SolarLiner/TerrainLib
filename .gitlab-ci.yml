@@ -43,6 +43,7 @@ pdf-doc:
   before_script:
     - apt-get update -qq
     - apt-get install texlive latexmk make -yqq
+    - pipenv install --system --dev
   script:
     - make latex
     - cd docs/latex
