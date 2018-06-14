@@ -26,6 +26,8 @@ test:
   coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
   allow_failure: true
   when: always
+  except:
+    - schedules
 
 pages:
   stage: build
@@ -36,6 +38,8 @@ pages:
     paths:
       - public
     name: HTML Documentation
+  except:
+    - schedules
 
 build:
   stage: build
@@ -51,3 +55,4 @@ build:
     - master
     - staging
     - tags
+    - schedules
