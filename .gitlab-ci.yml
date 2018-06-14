@@ -5,6 +5,10 @@ cache:
     - .cache/pip
     - venv/
 
+stages:
+  - build
+  - test
+
 before_script:
   - pip install pipenv
   - ls -alh
@@ -14,6 +18,7 @@ before_script:
   - pipenv install --dev
 
 test:
+  stage: test
   script:
     - nosetests tests --with-coverage
   after_script:
@@ -23,6 +28,7 @@ test:
   allow_failure: true
 
 pages:
+  stage: build
   script:
     - make html
     - cp -r docs/html/ public/
@@ -32,6 +38,7 @@ pages:
     name: HTML Documentation
 
 pdf-doc:
+  stage: build
   image: debian:latest
   before_script:
     - apt-get update -qq
@@ -46,6 +53,7 @@ pdf-doc:
     name: PDF Documentation
 
 build:
+  stage: build
   script:
     - python setup.py sdist --formats=gztar,zip
     - mkdir TerrainLib
