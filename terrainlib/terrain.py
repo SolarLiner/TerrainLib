@@ -1,3 +1,6 @@
+"""The Terrain class contains the object type that will hold all necessary, Terrain-related data to pass from function
+to function."""
+
 # TerrainLib - A fast terrain generation library
 # Copyright © 2018  Nathan "SolarLiner" Graule
 

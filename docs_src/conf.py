@@ -40,6 +40,7 @@ release = '0.0.1'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
@@ -79,7 +80,7 @@ language = None
 exclude_patterns = []
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = 'monokai'
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -167,8 +168,14 @@ texinfo_documents = [
 
 
 # -- Extension configuration -------------------------------------------------
+# Autodoc
+import sys, os
+sys.path.insert(0, os.path.abspath('../'))
 
+# Autosummary
+autosummary_generate = True
 # -- Options for todo extension ----------------------------------------------
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
+
