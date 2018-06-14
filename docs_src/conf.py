@@ -87,11 +87,8 @@ pygments_style = 'monokai'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-import guzzle_sphinx_theme
 
-html_theme = 'guzzle_sphinx_theme'
-html_theme_path = guzzle_sphinx_theme.html_theme_path()
-extensions.append('guzzle_sphinx_theme')
+html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -103,10 +100,6 @@ extensions.append('guzzle_sphinx_theme')
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
-
-html_theme_options = {
-    'project_nav_name': '{} {}'.format(project, version)
-}
 
 
 # -- Options for HTMLHelp output ---------------------------------------------

@@ -22,6 +22,12 @@ staying customizable.
 
 In a few lines you'll be able to create realistic looking terrain of any size.
 
+License
+-------
+
+TerrainLib is licensed under LGPL v3. Non open-source, commercial projects are welcomed, but should ask for explicit
+licensing agreement. 
+
 Indices and tables
 ==================
 

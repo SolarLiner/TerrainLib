@@ -12,12 +12,12 @@ coverage = "*"
 sphinx = "*"
 recommonmark = "*"
 codacy-coverage = "*"
-guzzle-sphinx-theme = "*"
 
 [packages]
 numpy = "*"
 pillow = "*"
 numexpr = "*"
+sphinx-rtd-theme = "*"
 
 [requires]
 python_version = "3.6"
