@@ -6,13 +6,6 @@
 TerrainLib
 ======================================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   gettingstarted
-   reference
-
 TerrainLib is a library of algorithms used for landscape generation. They include generation, filtering and export
 functions to allow to do everything with only one dependency: this library.
 
@@ -27,6 +20,13 @@ License
 
 TerrainLib is licensed under LGPL v3. Non open-source, commercial projects are welcomed, but should ask for explicit
 licensing agreement. 
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   gettingstarted
+   reference
 
 Indices and tables
 ==================
