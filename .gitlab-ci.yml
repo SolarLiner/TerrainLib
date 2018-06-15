@@ -22,7 +22,6 @@ test:
     - nosetests tests --with-coverage
   after_script:
     - source venv/bin/activate
-    - which python
     - coverage xml
     - python-codacy-coverage -r coverage.xml
   coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
