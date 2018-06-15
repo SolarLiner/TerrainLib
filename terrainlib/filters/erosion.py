@@ -17,7 +17,6 @@ all other kind of goodies that elevate a terrain from 'just nice' to 'completely
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import logging
-from itertools import product
 
 import numpy
 import numexpr
