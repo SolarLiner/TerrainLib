@@ -57,6 +57,7 @@ test:
   artifacts:
     paths:
       - .coverage
+    when: always
   allow_failure: true
   when: always
   except:
