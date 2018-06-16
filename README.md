@@ -17,6 +17,8 @@ step if needed, for the algorithms to bootstrap themselves.
 Generators and filters output a Terrain object, and Filters and Readers take in
 a Terrain object, so you can chain filters to achieve the desired effect.
 
+The full documentation is available at https://solarliner.gitlab.io/terrainlib.
+
 ## Development install
 
 This project uses Pipenv to manage dev and production dependencies. Therefore, 
