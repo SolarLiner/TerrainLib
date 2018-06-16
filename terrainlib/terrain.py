@@ -30,7 +30,13 @@ class Terrain:
         return self._size
 
     def __getitem__(self, key):
-        return self._heightmap[int(key[1] % self.size)][int(key[0] % self.size)]
+        if isinstance(key[0], int):
+            cols = self._heightmap[key[0]]
+        if isinstance(key[0], float):
+            cols = self._heightmap[int(key[0]) % self.size]
+            next_cols = self._heightmap[int(key[0] + 1) % self.size]
+            frac_part = key[0] - int(key[0])
+            cols = frac_part * next_cols + (1.0 - frac_part) * cols
 
     def __setitem__(self, key, value):
         self._heightmap[key[1] % self.size][key[0] % self.size] = value
