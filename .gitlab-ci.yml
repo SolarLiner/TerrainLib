@@ -42,10 +42,9 @@ test:
 
 pages:
   stage: report
-  before_script:
+  script:
     - ls -alh
     - source venv/bin/activate
-  script:
     - sphinx-apidoc -o docs_src/api terrainlib
     - make html
     - cp -r docs/html/ public/
@@ -68,10 +67,9 @@ pages:
 
 coverage:
   stage: report
-  before_script:
+  script:
     - ls -alh
     - source venv/bin/activate
-  script:
     - coverage xml
     - python-codacy-coverage -r coverage.xml
   cache:
