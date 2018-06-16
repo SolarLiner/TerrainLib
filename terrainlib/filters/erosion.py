@@ -194,7 +194,7 @@ class ThermalErosionFilter(TerrainFilter):
         return arr
 
 
-class StrataFilter(TerrainFilter):
+class StrataErosionFilter(TerrainFilter):
 
     def __init__(self, number=5.0):
         self.levels = float(max(2., number))

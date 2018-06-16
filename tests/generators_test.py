@@ -1,5 +1,4 @@
 import random
-import unittest
 
 import numpy
 
@@ -48,3 +47,12 @@ class TestDiamondSquareGenerator:
         for i in numpy.linspace(0.1, 1., 8).tolist():
             gen = DiamondSquareGenerator(5, i)
             yield self.assert_terrain_minmax, gen()
+
+class TestVoronoiGenerator:
+    def test_terrain_size(self):
+        points = numpy.random.uniform(0, 1024, (50, 2))
+        gen = VoronoiGenerator(1024)
+
+        terr = gen(points.tolist())
+
+        assert terr.size == 1024
