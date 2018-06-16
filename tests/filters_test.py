@@ -1,10 +1,10 @@
-from terrainlib.generators.image import PILInputGenerator
+from terrainlib.generators.procedural import DiamondSquareGenerator
 from terrainlib.filters.erosion import ThermalErosionFilter, StrataErosionFilter
 
 
 class TestThermalErosion:
     def setup(self):
-        gen = PILInputGenerator('../data/terrain_in.png', PILInputGenerator.BITDEPTH_16)
+        gen = DiamondSquareGenerator(5, 0.1)
         eroder = ThermalErosionFilter(10)
 
         self.terr = gen()
@@ -16,7 +16,7 @@ class TestThermalErosion:
 
 class TestStrataErosion:
     def setup(self):
-        gen = PILInputGenerator('../data/terrain_in.png', PILInputGenerator.BITDEPTH_16)
+        gen = DiamondSquareGenerator(5, 0.1)
         eroder = StrataErosionFilter(8.5)
 
         self.terr = gen()
