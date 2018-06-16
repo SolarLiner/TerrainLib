@@ -13,7 +13,7 @@ dependencies:
     - if [ ! -d "venv" ]; then virtualenv venv; fi
   script:
     - git diff --name-only `cat venv/last_sha || git log --oneline | tail -1 | awk '{print $1}'` | grep Pipfile
-    - if [ "$? " = "1 " ]; exit 0; fi
+    - if [ "$? " = "1 " ]; then exit 0; fi
     - source venv/bin/activate
     - export LC_ALL=C.UTF-8; export LANG=C.UTF-8 # Pipenv/Click text encoding mitigation. See http://click.pocoo.org/5/python3/
     - pipenv install --dev
