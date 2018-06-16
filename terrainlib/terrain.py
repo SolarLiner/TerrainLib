@@ -22,9 +22,20 @@ import numpy
 
 
 class Terrain:
-    def __init__(self, size):
-        self._size = size
-        self._heightmap = numpy.zeros((size, size))
+    def __init__(self, size=None, array=None):
+        if array is not None:
+            shape = numpy.shape(array)
+            if not len(shape) == 2:
+                raise TypeError('Input array should be 2-dimensional')
+            if not shape[1] == shape[0]:
+                raise TypeError('Input array should be square')
+            self._heightmap = numpy.array(array)
+            self._size = shape[0]
+        elif size is not None:
+            self._size = size
+            self._heightmap = numpy.zeros((size, size))
+        else:
+            raise TypeError('Either size or input 2D array should be passed as input')
 
     @property
     def size(self):
@@ -62,19 +73,22 @@ class Terrain:
         if isinstance(other, Terrain):
             return numpy.add(self._heightmap, other._heightmap)
         else:
-            return numpy.add(self._heightmap, other)
+            res = numpy.add(self._heightmap, other)
+            return Terrain(array=res)
 
     def __sub__(self, other):
         if isinstance(other, Terrain):
             return numpy.subtract(self._heightmap, other._heightmap)
         else:
-            return numpy.subtract(self._heightmap, other)
+            res = numpy.subtract(self._heightmap, other)
+            return Terrain(array=res)
 
     def __mul__(self, other):
         if isinstance(other, Terrain):
             return numpy.multiply(self._heightmap, other._heightmap)
         else:
-            return numpy.multiply(self._heightmap, other)
+            res = numpy.multiply(self._heightmap, other)
+            return Terrain(array=res)
 
     def __str__(self):
         return "Terrain(size={}): {}".format(self.size, str(self._heightmap))
