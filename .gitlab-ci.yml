@@ -27,9 +27,9 @@ dependencies:
 test:
   stage: test
   script:
+    - source venv/bin/activate
     - nosetests tests --with-coverage
   after_script:
-    - source venv/bin/activate
     - coverage xml
     - python-codacy-coverage -r coverage.xml
   coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
@@ -38,7 +38,7 @@ test:
   artifacts:
     paths:
       - .coverage
-    expire_in: 20 min
+    expire_in: 1 hour
   allow_failure: true
   when: always
   except:
