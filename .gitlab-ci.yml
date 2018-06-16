@@ -39,6 +39,7 @@ test:
 pages:
   stage: pages
   script:
+    - ls -alh
     - sphinx-apidoc -o docs_src/api terrainlib
     - make html
     - coverage html
