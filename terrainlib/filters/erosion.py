@@ -179,9 +179,7 @@ class ThermalErosionFilter(TerrainFilter):
             logger.info('Thermal erosion %.1f%%', 100*i/self.iterations)
             heights = self.erode_once(heights)
 
-        new_terrain = Terrain(terrain.size)
-        new_terrain._heightmap = heights.tolist()
-        return new_terrain
+        return Terrain(array=heights)
 
     def erode_once(self, heights: numpy.ndarray):
         """Erode once. Should not be called directly.
@@ -202,7 +200,4 @@ class StrataErosionFilter(TerrainFilter):
     def __call__(self, terrain: Terrain):
         heights = numpy.multiply(terrain._heightmap, self.levels)
 
-        new_terrain = Terrain(terrain.size)
-        new_terrain._heightmap = numpy.divide(numpy.around(heights), self.levels)
-
-        return new_terrain
+        return Terrain(array=heights)

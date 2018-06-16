@@ -54,8 +54,8 @@ class DiamondSquareGenerator(TerrainGenerator):
         ``generator = DiamondSquareGenerator(10, 0.1)   # Generates a 1025-sized grid with roughness of 0.1``
         """
         self.side_length = (2**size)+1
-        self.terrain = Terrain(self.side_length)
         self.roughness = min(1., max(0.001, roughness))
+        self.heights = numpy.zeros((self.side_length, self.side_length))
         if seed is not None:
             random.seed(seed)
 
@@ -64,19 +64,7 @@ class DiamondSquareGenerator(TerrainGenerator):
         """
         self._setup_terrain()
         self._divide(self.side_length-1)
-        return self._gen_terrain()
-
-    def _gen_terrain(self):
-        """Setups the algorithm with proper size. Should not be called from outside."""
-        arr = numpy.array(self.terrain._heightmap)
-        minimum = numpy.min(arr)
-        maximum = numpy.max(arr) - minimum
-
-        arr = numpy.subtract(arr, minimum)
-        arr = numpy.divide(arr, maximum)
-
-        self.terrain._heightmap = arr.tolist()
-        return self.terrain
+        return Terrain(array=self.heights)
 
     def _divide(self, size: int):
         """Recursive function that applies the diamond square process through the entire grid. Should not be called
@@ -110,14 +98,14 @@ class DiamondSquareGenerator(TerrainGenerator):
         :param size: current iteration square size
         :param scale: current iteration random bounds scaling value
         """
-        tl = self.terrain[x-size,y-size]
-        tr = self.terrain[x-size,y+size]
-        br = self.terrain[x+size,y+size]
-        bl = self.terrain[x+size,y-size]
+        tl = self.heights[x-size,y-size]
+        tr = self.heights[x-size,y+size]
+        br = self.heights[x+size,y+size]
+        bl = self.heights[x+size,y-size]
 
         average = ((tl + tr + bl + br) / 4)
         offset = random.uniform(-scale, scale)        
-        self.terrain[x,y] = average + offset
+        self.heights[x,y] = average + offset
 
     def _diamond(self, x: int, y: int, size: int, scale: float):
         """Performs the diamond step of the generation algorithm. Should not be called directly.
@@ -127,24 +115,24 @@ class DiamondSquareGenerator(TerrainGenerator):
         :param size: current iteration square size
         :param scale: current iteration random bounds scaling value
         """
-        t = self.terrain[x,y-size]
-        l = self.terrain[x+size,y]
-        b = self.terrain[x,y+size]
-        r = self.terrain[x-size,y]
+        t = self.heights[x,y-size]
+        l = self.heights[x+size,y]
+        b = self.heights[x,y+size]
+        r = self.heights[x-size,y]
 
         average = ((t+l+b+r)/4.0)
         offset = random.uniform(-scale, scale)
-        self.terrain[x,y] = average + offset
+        self.heights[x,y] = average + offset
 
     def _setup_terrain(self):
         """Setups the terrain for generation. Should not be called directly."""
         logger.debug('Setting up terrain size %i', self.side_length)
         maximum = self.side_length - 1
 
-        self.terrain[0,0] = random.uniform(-self.side_length, self.side_length)
-        self.terrain[maximum,0] = random.uniform(-self.side_length, self.side_length)
-        self.terrain[0,maximum] = random.uniform(-self.side_length, self.side_length)
-        self.terrain[maximum,maximum] = random.uniform(-self.side_length, self.side_length)
+        self.heights[0,0] = random.uniform(-self.side_length, self.side_length)
+        self.heights[maximum,0] = random.uniform(-self.side_length, self.side_length)
+        self.heights[0,maximum] = random.uniform(-self.side_length, self.side_length)
+        self.heights[maximum,maximum] = random.uniform(-self.side_length, self.side_length)
 
 
 class VoronoiGenerator(TerrainGenerator):
@@ -156,10 +144,10 @@ class VoronoiGenerator(TerrainGenerator):
     Source: https://en.wikipedia.org/wiki/Voronoi_diagram"""
 
     def __init__(self, size):
-        self.terrain = Terrain(size)
+        self.size = size
 
     def __call__(self, points: list):
-        depthmap = numpy.ones(shape=(self.terrain.size, self.terrain.size), dtype=float)*1e308
+        depthmap = numpy.ones(shape=(self.size, self.size), dtype=float)*1e308
         points = tuple(numpy.round(points).tolist())
 
         def hypot(X,Y):
@@ -171,7 +159,4 @@ class VoronoiGenerator(TerrainGenerator):
             para = numpy.fromfunction(hypot, depthmap.shape)
             depthmap = numpy.where(para < depthmap, para, depthmap)
 
-        maximum = numpy.max(depthmap)
-        self.terrain._heightmap = numpy.divide(depthmap, maximum).tolist()
-        return self.terrain
-
+        return Terrain(array=depthmap)

@@ -48,13 +48,9 @@ class PILInputGenerator(TerrainGenerator):
         else:
             raise TypeError("Image can only be a string or a PIL.Image instance.")
 
-        self.terrain = Terrain(size)
-
     def __call__(self):
         """Generates the terrain from image data."""
-        self.terrain._heightmap = self.data.tolist()
-
-        return self.terrain
+        return Terrain(array=self.data)
 
     def _setup_image(self, image, bitdepth):
         """Crops the image to be a square. Should not be called directly."""
