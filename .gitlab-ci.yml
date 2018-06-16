@@ -57,7 +57,6 @@ test:
   artifacts:
     paths:
       - .coverage
-    expire_in: 1 hour
   allow_failure: true
   when: always
   except:
