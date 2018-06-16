@@ -31,6 +31,8 @@ test:
     paths:
       - .coverage
     expire_in: 20 min
+  dependencies:
+    - pages
   allow_failure: true
   when: always
   except:
