@@ -4,16 +4,14 @@ stages:
   - setup
   - build
   - test
-  - pages
-
-before_script:
-  - pip install pipenv
-
+  - report
 
 dependencies:
   stage: setup
-  script:
+  before_script:
+    - pip install pipenv
     - if [ ! -d "venv" ]; then virtualenv venv; fi
+  script:
     - source venv/bin/activate
     - export LC_ALL=C.UTF-8; export LANG=C.UTF-8 # Pipenv/Click text encoding mitigation. See http://click.pocoo.org/5/python3/
     - pipenv install --dev
@@ -46,15 +44,17 @@ test:
     - schedules
 
 pages:
-  stage: pages
-  script:
+  stage: report
+  before_script:
     - ls -alh
     - source venv/bin/activate
+  script:
     - sphinx-apidoc -o docs_src/api terrainlib
     - make html
-    - coverage html
     - cp -r docs/html/ public/
+    - coverage html
     - cp -r htmlcov public/coverage
+  allow_failure: true
   cache:
     paths:
       - venv/
@@ -68,6 +68,19 @@ pages:
     - test
   except:
     - schedules
+
+coverage:
+  stage: report
+  before_script:
+    - source venv/bin/activate
+  script:
+    - coverage xml
+    - python-codacy-coverage -r coverage.xml
+  cache:
+    key: "$CI_COMMIT_REF_SLUG"
+    policy: pull
+    paths:
+      - venv/
 
 build:
   stage: build
