@@ -15,6 +15,13 @@ staying customizable.
 
 In a few lines you'll be able to create realistic looking terrain of any size.
 
+Coverage
+---------
+
+Test coverage data is available under the `coverage`_ folder.
+
+.. _coverage: https://solarliner.gitlab.io/terrainlib/coverage
+
 License
 -------
 
