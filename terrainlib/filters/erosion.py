@@ -74,8 +74,8 @@ class HydraulicErosionFilter(TerrainFilter):
     particles.
 
     Source: https://en.wikipedia.org/wiki/Hydraulic_action"""
-    FLAT = 0.01
-    def __init__(self, iterations: int, rain_amt=0.01, solubility=0.1, capacity=0.5, evaporation=0.3):
+
+    def __init__(self, iterations: int, delta_t=0.01, rain_amt=0.012, solubility=0.1, capacity=1., evaporation=.015):
         """Initialize hydraulic erosion weathering.
 
         :param iterations: Number of repeated times the algorithm will be ran. Values below 50 typically do not yeild
@@ -85,11 +85,10 @@ class HydraulicErosionFilter(TerrainFilter):
         :param capacity: Amount of soil that can be contained in water.
         :param evaporation: Amount of water that evaporates after each iteration.
         """
-        self.rainfall = max(0.01, min(1., rain_amt))
+        self.rainfall = max(0.001, min(.05, rain_amt))
         self.iterations = max(2, iterations)
-        self.solubility = max(0.01, min(1., solubility))
-        self.evaporation = max(0.01, min(1., evaporation))
-        self.capacity = max(0.01, min(1., capacity))
+        self.evaporation = max(0.001, min(.05, evaporation))
+        self.capacity = max(0.1, min(3., capacity))
 
     def __call__(self, terrain: Terrain):
         """Runs the erosion algorithm with the input Terrain object.
@@ -101,55 +100,52 @@ class HydraulicErosionFilter(TerrainFilter):
 
         :param terrain: Terrain object to apply erosion to.
         :returns: new Terrain object with erosion applied"""
-        h = numpy.array(terrain._heightmap)
-        shape = h.shape
-        difference = numpy.zeros(shape)
-        m = numpy.zeros(shape)
-        w = numpy.zeros(shape)
+        scale = 512     # TODO: Take that value from terrain properties
+        b = numpy.array(terrain._heightmap)
+        d = numpy.zeros(b.shape)
+        s = numpy.zeros(b.shape)
+        f = numpy.zeros((4,) + b.shape)     # [west, east, north, south]
+        v = numpy.zeros((2,) + b.shape)
 
-        nsew = (north,east,south,west)
+        dt = .01
+        Kr = self.rainfall
+        Ke = self.evaporation
+        A  = 20
+        g  = 9.81
+        Kc = self.capacity
+        Kt = .15
+        Ks = .5
+        Kd = 1
+        Kh = 5
+        Kdmax = 10
+        Ka = .8
+        Ki = .1
+        l = 1   # TODO: Take that value from terrain properties
 
         for i in range(self.iterations):
-            logger.info('Hydraulic erosion %.1f%%', 100*i/self.iterations)
+            logger.info('%i%% - Iteration %i', 100*i//self.iterations, i+1)
+            d1 = d + dt * Kr
+            tf = numpy.zeros(d.shape)
+            for i,dir in enumerate([west, east, north, south]):
+                dh = b + d1 - dir(b) - dir(d1)
+                f[i] = numpy.maximum(0.0, f[i] + dt * A * (numpy.divide(g * dh, l)))
+                tf = numpy.add(tf, f[i])
+            K = numpy.maximum(1., numpy.divide(d1*l*l, tf * dt))
+            f = numpy.multiply(f, K)
 
-            # Step 1: rainfall
-            w += self.rainfall
+            fin = [dir(f[i]) for i, dir in enumerate((west, east, north, south))]
+            fin = numpy.reshape(fin, d.shape + (4,))
+            dV = dt * (numpy.sum(fin, 2) - numpy.sum(numpy.reshape(f, d.shape + (4,), 2)))
+            logger.debug('dV: %s - d: %s', repr(dV.shape), repr(d.shape))
+            d = d + numpy.divide(dV, l*l)
 
-            # Step 2: erosion
-            h -= self.solubility
-            m += self.solubility
-
-            # Step 3: movement
-            a = numpy.add(w, h)
-            avg_a = numpy.divide(numpy.sum([dir(a) for dir in nsew]), 4.0)
-            delta_a = numpy.subtract(a, avg_a)
-
-            d_i = [(a - dir(a)) for dir in nsew]
-            d_tot = numpy.sum(numpy.where(numexpr.evaluate('d_i > 0'), d_i, 0), 2)
-
-            delta_mi = []
-            for i in range(4):
-                d = d_i[i]
-                delta_wi = numpy.multiply(numpy.divide(d, d_tot), numpy.min(w, delta_a))
-                delta_mi.append(numpy.multiply(m, numpy.divide(delta_wi, w)))
-
-            for i in range(4):
-                dir = nsew[i]
-                m += dir(delta_mi[(i+2)%4])
-
-            # Step 4: evaporation
-            w *= 1 - self.evaporation
-            difference = numpy.maximum(self.capacity - m, numpy.zeros(shape))
-            m -= difference
-            h += difference
-
-        self.sediments_map = m
-        self.water_map = w
-        self.difference_map = difference
+            d *= 1 - Ke
+            b += d * Ke * Kc
 
         new_terrain = Terrain(terrain.size)
-        new_terrain._heightmap = h.tolist()
+        new_terrain._heightmap = b.tolist()
         return new_terrain
+
 
 
 class ThermalErosionFilter(TerrainFilter):
