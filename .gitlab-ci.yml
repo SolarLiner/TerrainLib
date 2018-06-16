@@ -8,10 +8,6 @@ stages:
 
 dependencies:
   stage: setup
-  cache:
-    paths:
-      - venv
-    key: "$CI_COMMIT_REF_SLUG"
   before_script:
     - pip install pipenv
     - if [ ! -d "venv" ]; then virtualenv venv; fi
@@ -19,6 +15,10 @@ dependencies:
     - source venv/bin/activate
     - export LC_ALL=C.UTF-8; export LANG=C.UTF-8 # Pipenv/Click text encoding mitigation. See http://click.pocoo.org/5/python3/
     - pipenv install --dev
+  cache:
+    paths:
+      - venv
+    key: "$CI_COMMIT_REF_SLUG"
 
 build:
   stage: build
@@ -45,6 +45,7 @@ build:
 test:
   stage: test
   script:
+    - ls -alh
     - source venv/bin/activate
     - nosetests tests --with-coverage
   coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
