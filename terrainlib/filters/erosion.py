@@ -142,9 +142,7 @@ class HydraulicErosionFilter(TerrainFilter):
             d *= 1 - Ke
             b += d * Ke * Kc
 
-        new_terrain = Terrain(terrain.size)
-        new_terrain._heightmap = b.tolist()
-        return new_terrain
+        return Terrain(array=b)
 
 
 
