@@ -104,8 +104,8 @@ class HydraulicErosionFilter(TerrainFilter):
         b = numpy.array(terrain._heightmap)
         d = numpy.zeros(b.shape)
         s = numpy.zeros(b.shape)
-        f = numpy.zeros((4,) + b.shape)     # [west, east, north, south]
-        v = numpy.zeros((2,) + b.shape)
+        f = numpy.zeros((4,) + b.shape)     # [west, east , north, south]
+        v = numpy.zeros((2,) + b.shape)     # [left, right, top  , down ]
 
         dt = .01
         Kr = self.rainfall
@@ -138,6 +138,13 @@ class HydraulicErosionFilter(TerrainFilter):
             dV = dt * (numpy.sum(fin, 2) - numpy.sum(numpy.reshape(f, d.shape + (4,), 2)))
             logger.debug('dV: %s - d: %s', repr(dV.shape), repr(d.shape))
             d = d + numpy.divide(dV, l*l)
+
+            dw_x = 1/2 * (west(f[1]) - f[0] + f[1] - east(f[0]))
+            dw_y = 1/2 * (north(f[3]) - f[2] + f[3] - south(f[2]))
+
+            grad = numpy.reshape(numpy.gradient(b), (2,) + b.shape)
+            angle = numpy.arctan2(grad[0], grad[1])
+            C = Kc * numpy.sin(angle * (dw_y**2 + dw_x**2)**.5)     # TODO: Implement ramp function
 
             d *= 1 - Ke
             b += d * Ke * Kc
