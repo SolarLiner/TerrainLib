@@ -107,6 +107,7 @@ venv.bak/
 terrain_*.png
 terrain_final.txt
 .vscode/settings.json
+.idea/workspace.xml
 /.gtm/
 
 # Documentation
