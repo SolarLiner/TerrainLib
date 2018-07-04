@@ -36,6 +36,10 @@ class Terrain:
         else:
             raise TypeError('Either size or input 2D array should be passed as input')
 
+    def copy(self):
+        """Copy the current Terrain object and returns it."""
+        return Terrain(array=self._heightmap)
+
     @property
     def size(self):
         return self._size
