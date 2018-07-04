@@ -16,8 +16,20 @@ to function."""
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+from typing import Any
 
 import numpy
+
+
+def lerp(x: float, a: Any, b: Any):
+    """
+    Linearly interpolate between two objects a and b, using control value x.
+    :param x: Float control value. Values 0..1 interpolate, while values outside extrapolate.
+    :param a: Object to be interpolated from. Must support multiplication with a float and addition with `type(b)`.
+    :param b: Object to be interpolated to. Must support multiplication with a float and addition with `type(a)`.
+    :return: Interpolated value, type of result a+b.
+    """
+    return x * b + (1.0 - x) * a
 
 
 class Terrain:
@@ -45,26 +57,40 @@ class Terrain:
         return self._size
 
     def __getitem__(self, key):
-        if isinstance(key[0], int):
+        if isinstance(key, int):
+            return self._heightmap[key]
+        if isinstance(key, float):
+            int_part = int(key)
+            frac_part = key - int_part
+            cols = self._heightmap[int_part]
+            next_cols = self._heightmap[int_part+1]
+            return lerp(frac_part, cols, next_cols)
+        if not isinstance(key, tuple):
+            raise TypeError('Item key must either be int, float, or tuple of int, float, slice. %s received.' % str(
+                    type(key)))
+
+        if isinstance(key[0], slice) and isinstance(key[1], slice):
+            return self._heightmap[key]
+        if isinstance(key[0], (int, slice)):
             cols = self._heightmap[key[0]]
         if isinstance(key[0], float):
             cols = self._heightmap[int(key[0]) % self.size]
             next_cols = self._heightmap[int(key[0] + 1) % self.size]
             frac_part = key[0] - int(key[0])
-            cols = frac_part * next_cols + (1.0 - frac_part) * cols
+            cols = lerp(frac_part, cols, next_cols)
 
-        if isinstance(key[1], int):
+        if isinstance(key[1], (int, slice)):
             val = cols[key[1]]
         if isinstance(key[1], float):
             val = cols[int(key[1]) % self.size]
             val_next = cols[int(key[1]+1) % self.size]
             frac_part = key[1] - int(key[1])
-            val = frac_part * val_next + (1.0 - frac_part) * val
+            val = lerp(frac_part, val, val_next)
 
         return val
 
     def __setitem__(self, key, value):
-        self._heightmap[key[1] % self.size,key[0] % self.size] = value
+        self._heightmap[key[1] % self.size, key[0] % self.size] = value
 
     def __eq__(self, other):
         if isinstance(other, Terrain):
