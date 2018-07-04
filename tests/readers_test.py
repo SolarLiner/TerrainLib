@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from terrainlib.generators.procedural import DiamondSquareGenerator
@@ -9,6 +10,12 @@ class TestImageExport:
         self.terrain = DiamondSquareGenerator(6, .1)()
         self.file_png = Path('test_terrain_export.png')
         self.file_tif = Path('test_terrain_export.tif')
+
+    def teardown(self):
+        if self.file_png.is_file():
+            os.remove(str(self.file_png))
+        if self.file_tif.is_file():
+            os.remove(str(self.file_tif))
 
     def save_bitdepth_factory(self, bitdepth, filepath):
         img_reader = PILImageReader(bitdepth)
