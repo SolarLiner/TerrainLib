@@ -6,7 +6,7 @@ from terrainlib.terrain import Terrain
 
 class TestTerrain:
     def test_accepts_size(self):
-        terr = Terrain(256)
+        terr = Terrain(size=256)
 
         assert terr.size == 256
 
@@ -15,7 +15,7 @@ class TestTerrain:
         terr = Terrain(array)
 
         assert terr.size == 256
-        assert terr._heightmap == array
+        assert numpy.equal(terr._heightmap, array).all()
 
     @raises(TypeError)
     def test_throws_on_nonsquare_array(self):
@@ -55,8 +55,9 @@ class TestTerrain:
 
         terr1 = Terrain(array=arr1)
         terr2 = Terrain(array=arr2)
+        terr_res = terr1 + terr2
 
-        assert (terr1 + terr2)._heightmap == res
+        assert terr_res == res
 
     def test_terrain_subtraction(self):
         arr1 = numpy.ones((128, 128)) * 0.3
@@ -65,8 +66,9 @@ class TestTerrain:
 
         terr1 = Terrain(array=arr1)
         terr2 = Terrain(array=arr2)
+        terr_res = terr1 - terr2
 
-        assert (terr1 - terr2)._heightmap == res
+        assert terr_res == res
 
     def test_terrain_multiplication(self):
         arr1 = numpy.ones((128, 128)) * 2.0
@@ -75,8 +77,9 @@ class TestTerrain:
 
         terr1 = Terrain(array=arr1)
         terr2 = Terrain(array=arr2)
+        terr_res = (terr1 * terr2)
 
-        assert (terr1 * terr2)._heightmap == res
+        assert terr_res == res
 
     def test_terrain_division(self):
         arr1 = numpy.ones((128, 128)) * 2.0
@@ -85,8 +88,9 @@ class TestTerrain:
 
         terr1 = Terrain(array=arr1)
         terr2 = Terrain(array=arr2)
+        terr_res = terr2 / terr1
 
-        assert (terr2 / terr1)._heightmap == res
+        assert terr_res == res
 
     def test_terrain_copy_array(self):
         arr = numpy.arange(0, 16 * 16).reshape((16, 16))
