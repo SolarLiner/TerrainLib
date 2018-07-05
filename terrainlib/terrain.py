@@ -52,6 +52,14 @@ class Terrain:
         """Copy the current Terrain object and returns it."""
         return Terrain(array=self._heightmap)
 
+    def to_array(self):
+        """Returns a copy of the numpy array."""
+        return self._heightmap.copy()
+
+    def to_list(self):
+        """Returns a 1D list of the array. Use [j + i * size] to calculate the index."""
+        return list(self._heightmap.reshape(self.size ** 2))
+
     @property
     def size(self):
         return self._size
@@ -63,7 +71,7 @@ class Terrain:
             int_part = int(key)
             frac_part = key - int_part
             cols = self._heightmap[int_part]
-            next_cols = self._heightmap[int_part+1]
+            next_cols = self._heightmap[int_part + 1]
             return lerp(frac_part, cols, next_cols)
         if not isinstance(key, tuple):
             raise TypeError('Item key must either be int, float, or tuple of int, float, slice. %s received.' % str(
@@ -83,7 +91,7 @@ class Terrain:
             val = cols[key[1]]
         if isinstance(key[1], float):
             val = cols[int(key[1]) % self.size]
-            val_next = cols[int(key[1]+1) % self.size]
+            val_next = cols[int(key[1] + 1) % self.size]
             frac_part = key[1] - int(key[1])
             val = lerp(frac_part, val, val_next)
 
