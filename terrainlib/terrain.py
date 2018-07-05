@@ -64,9 +64,9 @@ class Terrain:
 
     def __eq__(self, other):
         if isinstance(other, Terrain):
-            return numpy.equal(self._heightmap, other._heightmap).all()
+            return numpy.isclose(self._heightmap, other._heightmap).all()
         else:
-            return numpy.equal(self._heightmap, other).all()
+            return numpy.isclose(self._heightmap, other).all()
 
     def __add__(self, other):
         if isinstance(other, Terrain):
@@ -91,10 +91,10 @@ class Terrain:
 
     def __truediv__(self, other):
         if isinstance(other, Terrain):
-            return numpy.divide(self._heightmap, other._heightmap)
+            res = numpy.divide(self._heightmap, other._heightmap)
         else:
             res = numpy.divide(self._heightmap, other)
-            return Terrain(array=res)
+        return Terrain(array=res)
 
     def __str__(self):
         return "Terrain(size={}): {}".format(self.size, str(self._heightmap))
