@@ -25,9 +25,9 @@ class Terrain:
         if array is not None:
             shape = numpy.shape(array)
             if not len(shape) == 2:
-                raise TypeError('Input array should be 2-dimensional')
+                raise TypeError('Input array must be 2-dimensional')
             if not shape[1] == shape[0]:
-                raise TypeError('Input array should be square')
+                raise TypeError('Input array must be square')
             self._heightmap = numpy.array(array)
             self._size = shape[0]
         elif size is not None:
@@ -64,9 +64,9 @@ class Terrain:
 
     def __eq__(self, other):
         if isinstance(other, Terrain):
-            return numpy.equal(self._heightmap, other._heightmap)
+            return numpy.equal(self._heightmap, other._heightmap).all()
         else:
-            return numpy.equal(self._heightmap, other)
+            return numpy.equal(self._heightmap, other).all()
 
     def __add__(self, other):
         if isinstance(other, Terrain):
