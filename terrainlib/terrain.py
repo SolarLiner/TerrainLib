@@ -33,13 +33,16 @@ def lerp(x: float, a: Any, b: Any):
 
 
 class Terrain:
-    def __init__(self, array: numpy.ndarray = None, size: int = None):
+    _heightmap: numpy.ndarray
+    _size: int
+
+    def __init__(self, size: int = None, array: numpy.ndarray = None):
         if array is not None:
             shape = numpy.shape(array)
             if not len(shape) == 2:
-                raise TypeError('Input array must be 2-dimensional')
+                raise TypeError('Input array should be 2-dimensional')
             if not shape[1] == shape[0]:
-                raise TypeError('Input array must be square')
+                raise TypeError('Input array should be square')
             self._heightmap = numpy.array(array)
             self._size = shape[0]
         elif size is not None:
@@ -61,7 +64,7 @@ class Terrain:
         return list(self._heightmap.reshape(self.size ** 2))
 
     @property
-    def size(self):
+    def size(self) -> int:
         return self._size
 
     def __getitem__(self, key):
@@ -102,9 +105,9 @@ class Terrain:
 
     def __eq__(self, other):
         if isinstance(other, Terrain):
-            return numpy.isclose(self._heightmap, other._heightmap).all()
+            return numpy.equal(self._heightmap, other._heightmap)
         else:
-            return numpy.isclose(self._heightmap, other).all()
+            return numpy.equal(self._heightmap, other)
 
     def __add__(self, other):
         if isinstance(other, Terrain):
@@ -125,14 +128,9 @@ class Terrain:
             res = numpy.multiply(self._heightmap, other._heightmap)
         else:
             res = numpy.multiply(self._heightmap, other)
-        return Terrain(array=res)
-
-    def __truediv__(self, other):
-        if isinstance(other, Terrain):
-            res = numpy.divide(self._heightmap, other._heightmap)
-        else:
-            res = numpy.divide(self._heightmap, other)
-        return Terrain(array=res)
+==== BASE ====
+            return Terrain(array=res)
+==== BASE ====
 
     def __str__(self):
         return "Terrain(size={}): {}".format(self.size, str(self._heightmap))
