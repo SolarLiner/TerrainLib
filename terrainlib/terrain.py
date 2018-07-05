@@ -16,7 +16,6 @@ to function."""
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from itertools import product
 
 import numpy
 
@@ -88,6 +87,13 @@ class Terrain:
             return numpy.multiply(self._heightmap, other._heightmap)
         else:
             res = numpy.multiply(self._heightmap, other)
+            return Terrain(array=res)
+
+    def __truediv__(self, other):
+        if isinstance(other, Terrain):
+            return numpy.divide(self._heightmap, other._heightmap)
+        else:
+            res = numpy.divide(self._heightmap, other)
             return Terrain(array=res)
 
     def __str__(self):
