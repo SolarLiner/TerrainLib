@@ -20,7 +20,7 @@ import queue
 from threading import Thread
 
 
-class BaseThreaded(queue.Queue, metaclass=abc.ABCMeta):
+class BaseThreaded(queue.Queue):
     """A task queue holds a list of tasks to be computed by a worker. Multiple workers can be made available,
     allowing tasks to be run in parallel. This is implemented as a base class"""
     num_workers: int
@@ -42,6 +42,7 @@ class BaseThreaded(queue.Queue, metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def task(self, *args, **kwargs):
         """Task that gets parallel processed."""
+        pass
 
     def _start_workers(self):
         for _ in range(self.num_workers):
