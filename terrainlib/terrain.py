@@ -21,7 +21,7 @@ import numpy
 
 
 class Terrain:
-    def __init__(self, size=None, array=None):
+    def __init__(self, array: numpy.ndarray = None, size: int = None):
         if array is not None:
             shape = numpy.shape(array)
             if not len(shape) == 2:
