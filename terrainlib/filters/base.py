@@ -14,10 +14,62 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import abc
+from itertools import repeat
+from typing import Dict, Tuple
+
+import numpy
+
+from ..queue import BaseThreaded
+from ..terrain import Terrain
 
 
-class TerrainFilter:
-    """Modifies a Terrain object."""
+class TerrainFilter(metaclass=abc.ABCMeta):
+    """Modifies a Terrain object. This base class does not support threading. To allow threading in your algorithms,
+    use :class:`TerrainThreadedFilter`. """
+
+    @abc.abstractmethod
     def __call__(self, terrain, *args, **kwargs):
         """Apply transform onto the terrain. Must output terrain afterwards."""
-        raise NotImplementedError()
+
+
+class TerrainThreadedFilter(TerrainFilter, BaseThreaded, metaclass=abc.ABCMeta):
+    """Terrain filter that can be tiled and therefore can be threaded to use multiple cores of a CPU (or even use
+    multiple CPUs)."""
+    tile_size: int
+    results: Dict[Tuple[int, int], Terrain]
+
+    def __init__(self, tile_size: int):
+        super().__init__()
+        self.tile_size = tile_size
+        self.results = []
+
+    def __call__(self, terrain: Terrain, *args, **kwargs):
+        super(BaseThreaded).__call__()
+        tile_count = terrain.size // self.tile_size
+        for x, y in repeat(range(tile_count), 2):
+            tile_x = self.tile_size * x
+            tile_end_x = tile_x + self.tile_size if x < tile_count - 1 else terrain.size
+            tile_y = self.tile_size * y
+            tile_end_y = tile_y + self.tile_size if x < tile_count - 1 else terrain.size
+            slice_x = slice(tile_x, tile_end_x)
+            slice_y = slice(tile_y, tile_end_y)
+            tile = terrain[slice_x, slice_y]
+            self.put((tile, tile_x, tile_y))
+        self.join()  # Awaits completion of the filter
+
+        arr = numpy.zeros((terrain.size, terrain.size))
+        for (tile_x, tile_y), v in self.results.items():
+            slice_x = slice(self.tile_size * tile_x, self.tile_size * (tile_x + 1))
+            slice_y = slice(self.tile_size * tile_y, self.tile_size * (tile_y + 1))
+            arr[slice_x, slice_y] = v.to_array()
+
+        return Terrain(array=arr)
+
+    @abc.abstractmethod
+    def process_threaded(self, tile: Terrain, tile_x: int, tile_y: int) -> Terrain:
+        """Process the Terrain tile. Runs in a separate thread. """
+
+    def task(self, tile: Terrain, tile_x: int, tile_y: int):
+        result = self.process_threaded(tile, tile_x, tile_y)
+        self.results[(tile_x, tile_x)] = result
