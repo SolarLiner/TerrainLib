@@ -87,3 +87,13 @@ class TestTerrain:
         terr2 = Terrain(array=arr2)
 
         assert (terr2 / terr1)._heightmap == res
+
+    def test_terrain_copy_array(self):
+        arr = numpy.arange(0, 16 * 16).reshape((16, 16))
+        terr = Terrain(array=arr)
+
+        copy_arr = terr.to_array()  # type: numpy.ndarray
+        assert numpy.equal(arr, copy_arr).all()
+
+        copy_arr[::2] = 0
+        assert not numpy.equal(arr, copy_arr).all()

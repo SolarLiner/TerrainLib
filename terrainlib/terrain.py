@@ -70,24 +70,24 @@ class Terrain:
 
     def __add__(self, other):
         if isinstance(other, Terrain):
-            return numpy.add(self._heightmap, other._heightmap)
+            res = numpy.add(self._heightmap, other._heightmap)
         else:
             res = numpy.add(self._heightmap, other)
-            return Terrain(array=res)
+        return Terrain(array=res)
 
     def __sub__(self, other):
         if isinstance(other, Terrain):
-            return numpy.subtract(self._heightmap, other._heightmap)
+            res = numpy.subtract(self._heightmap, other._heightmap)
         else:
             res = numpy.subtract(self._heightmap, other)
-            return Terrain(array=res)
+        return Terrain(array=res)
 
     def __mul__(self, other):
         if isinstance(other, Terrain):
-            return numpy.multiply(self._heightmap, other._heightmap)
+            res = numpy.multiply(self._heightmap, other._heightmap)
         else:
             res = numpy.multiply(self._heightmap, other)
-            return Terrain(array=res)
+        return Terrain(array=res)
 
     def __truediv__(self, other):
         if isinstance(other, Terrain):
