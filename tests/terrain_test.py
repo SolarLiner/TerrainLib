@@ -11,17 +11,42 @@ class TestTerrain:
         assert terr.size == 256
 
     def test_accepts_array(self):
-        terr = Terrain(numpy.random.uniform(size=(256, 256)))
+        array = numpy.random.uniform(size=(256, 256))
+        terr = Terrain(array)
 
         assert terr.size == 256
+        assert terr._heightmap == array
 
     @raises(TypeError)
     def test_throws_on_nonsquare_array(self):
-        terr = Terrain(array=numpy.random.uniform(size=(256, 128)))
+        Terrain(array=numpy.random.uniform(size=(256, 128)))
 
     @raises(TypeError)
     def test_throws_on_non_2d_array(self):
-        terr = Terrain(array=numpy.random.uniform(size=128))
+        Terrain(array=numpy.random.uniform(size=128))
+
+    def test_get_item_int(self):
+        terr = Terrain(size=64)
+
+        assert terr[0] == numpy.zeros(64)
+
+    def test_get_item_float(self):
+        arr = numpy.zeros((64, 64))
+        arr[::2] = numpy.ones(64)
+
+        terr = Terrain(array=arr)
+        assert terr[0.5] == numpy.ones(64) * 0.5
+
+    def test_get_item_tuple(self):
+        terr = Terrain(array=numpy.ones((64, 64)))
+        assert terr[0, 0] == 1
+
+    def test_get_item_slice(self):
+        arr = numpy.arange(0, 64).reshape((16, 16))
+        terr = Terrain(array=arr)
+
+        assert terr[::2] == arr[::2]
+        assert terr[1:4, 1:4] == arr[1:4, 1:4]
 
     def test_terrain_addition(self):
         arr1 = numpy.ones((128, 128)) * 0.1
