@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import abc
 from itertools import repeat
+from threading import Lock
 from typing import Dict, Tuple
 
 import numpy
@@ -38,11 +39,13 @@ class TerrainThreadedFilter(TerrainFilter, BaseThreaded, metaclass=abc.ABCMeta):
     multiple CPUs)."""
     tile_size: int
     results: Dict[Tuple[int, int], Terrain]
+    results_mutex: Lock
 
     def __init__(self, tile_size: int):
         super().__init__()
         self.tile_size = tile_size
         self.results = []
+        self.results_mutex = Lock()
 
     def __call__(self, terrain: Terrain, *args, **kwargs):
         super(BaseThreaded).__call__()
@@ -62,7 +65,11 @@ class TerrainThreadedFilter(TerrainFilter, BaseThreaded, metaclass=abc.ABCMeta):
         for (tile_x, tile_y), v in self.results.items():
             slice_x = slice(self.tile_size * tile_x, self.tile_size * (tile_x + 1))
             slice_y = slice(self.tile_size * tile_y, self.tile_size * (tile_y + 1))
-            arr[slice_x, slice_y] = v.to_array()
+            # Technically since the array is only written to and not read, this should not matter. Defensive
+            # programming does call for this mutex anyway since the array can unfortunately be accessed from the
+            # outside due to Python implementation of OO.
+            with self.results_mutex:
+                arr[slice_x, slice_y] = v.to_array()
 
         return Terrain(array=arr)
 
