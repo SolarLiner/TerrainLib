@@ -54,5 +54,11 @@ class BaseThreaded(queue.Queue, metaclass=abc.ABCMeta):
             item = self.get()
             if item is None:
                 break
-            self.task(*item)
+            if isinstance(item, dict):
+                self.task(**item)
+            elif isinstance(item, (list, tuple)):
+                self.task(*item)
+            else:
+                self.task(item)
+
             self.task_done()
