@@ -21,7 +21,7 @@ from typing import Dict, Tuple
 
 import numpy
 
-from ..base_threaded import BaseThreaded
+from ..thread import BaseThreaded
 from ..terrain import Terrain
 
 

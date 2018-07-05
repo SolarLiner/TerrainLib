@@ -2,7 +2,7 @@ from random import random
 from time import sleep
 from typing import Union
 
-from terrainlib.base_threaded import BaseThreaded
+from terrainlib.thread import BaseThreaded
 
 
 class BadSleepSort(BaseThreaded):
