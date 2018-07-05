@@ -84,7 +84,7 @@ class TestTerrain:
     def test_terrain_division(self):
         arr1 = numpy.ones((128, 128)) * 2.0
         arr2 = numpy.ones((128, 128)) * .5
-        res = numpy.ones((128, 128))
+        res = numpy.ones((128, 128)) * 0.25
 
         terr1 = Terrain(array=arr1)
         terr2 = Terrain(array=arr2)
