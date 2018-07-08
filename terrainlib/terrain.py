@@ -128,9 +128,7 @@ class Terrain:
             res = numpy.multiply(self._heightmap, other._heightmap)
         else:
             res = numpy.multiply(self._heightmap, other)
-==== BASE ====
-            return Terrain(array=res)
-==== BASE ====
+        return Terrain(array=res)
 
     def __str__(self):
         return "Terrain(size={}): {}".format(self.size, str(self._heightmap))
