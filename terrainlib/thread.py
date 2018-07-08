@@ -14,10 +14,14 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import abc
 import os
 import queue
-from threading import Thread
+from collections import namedtuple
+from itertools import product
+from threading import Lock, Thread
+from typing import Any, Dict
+
+from terrainlib.terrain import Terrain
 
 
 class BaseThreaded(queue.Queue):
@@ -39,10 +43,9 @@ class BaseThreaded(queue.Queue):
         else:
             self.num_workers = max(1, int(count))
 
-    @abc.abstractmethod
     def task(self, *args, **kwargs):
         """Task that gets parallel processed."""
-        pass
+        raise NotImplementedError()
 
     def _start_workers(self):
         for _ in range(self.num_workers):
@@ -63,3 +66,59 @@ class BaseThreaded(queue.Queue):
                 self.task(item)
 
             self.task_done()
+
+
+Tile = namedtuple('Tile', 'x y')
+Size = namedtuple('Size', 'x y')
+
+
+class BaseTiled(BaseThreaded):
+    """Base class for tiled terrain processors.
+
+    Derived classes must implement `process_tile` which processes a tile, and `process_all` to process the whole
+    array of tiled results. If no process is needed, simply return the incoming array."""
+    lock: Lock
+    results: Dict[Tile, Any]
+
+    def task(self, terrain: Terrain, tile: Tile, size: Size, **kwargs):
+        result = self.process_tile(terrain, tile, size)
+        with self.lock:
+            self.results[tile] = result
+
+    def __init__(self, tile_size: int):
+        super().__init__()
+        self.tile_size = max(16, tile_size)
+        self.results = dict()
+        self.lock = Lock()
+
+    def __call__(self, terrain: Terrain, *args, **kwargs):
+        for tile, size in self._get_tiles(terrain.size):
+            self.put((terrain, tile, size))
+        super().__call__(*args, **kwargs)
+        self.join()
+
+        return self.process_results(self.results.copy())
+
+    def _get_tiles(self, terrain_size):
+        tile_count = terrain_size // self.tile_size
+        for i, j in product(range(tile_count), repeat=2):
+            tile_x = self.tile_size * i
+            tile_y = self.tile_size * j
+
+            if tile_x + self.tile_size > terrain_size:
+                size_x = terrain_size - tile_x
+            else:
+                size_x = self.tile_size
+
+            if tile_y + self.tile_size > terrain_size:
+                size_y = terrain_size - tile_x
+            else:
+                size_y = self.tile_size
+
+            yield (Tile(tile_x, tile_y), Size(size_x, size_y))
+
+    def process_tile(self, terrain: Terrain, tile: Tile, size: Size):
+        raise NotImplementedError()
+
+    def process_results(self, arr: Dict[Tile, Any]):
+        raise NotImplementedError()
