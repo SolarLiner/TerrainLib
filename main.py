@@ -1,14 +1,9 @@
-from datetime import timedelta
 import logging
-from itertools import product
 import time
+from datetime import timedelta
 
-import numpy
-from PIL import Image
-
-from terrainlib.generators.procedural import DiamondSquareGenerator, VoronoiGenerator
-from terrainlib.generators.image import PILInputGenerator
-from terrainlib.filters.erosion import ThermalErosionFilter, HydraulicErosionFilter, StrataFilter
+from terrainlib.filters.erosion import StrataFilter, ThermalErosionFilter
+from terrainlib.generators.procedural import DiamondSquareGenerator
 from terrainlib.readers.image import PILImageReader
 
 
@@ -22,10 +17,12 @@ class ElapsedFormatter(logging.Formatter):
         elapsed_time = timedelta(seconds=record.created - self.start)
         return '[{} s] {}'.format(elapsed_time, message)
 
+
 logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
 
 sh = logging.FileHandler('debug.log', 'w')
 sh.setFormatter(ElapsedFormatter('%(levelname)s @ %(module)s: %(message)s'))
+
 
 def main():
     # generator = PILInputGenerator('data/terrain_in.png', PILInputGenerator.BITDEPTH_8)
