@@ -14,11 +14,10 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import abc
 
 
-class TerrainGenerator(metaclass=abc.ABCMeta):
+class TerrainGenerator:
     """Base abstract class for terrain generation."""
-    @abc.abstractmethod
     def __call__(self, *args, **kwargs):
         """Generates a terrain."""
+        raise NotImplementedError()

@@ -14,11 +14,10 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import abc
 
 
-class TerrainFilter(metaclass=abc.ABCMeta):
+class TerrainFilter:
     """Modifies a Terrain object."""
-    @abc.abstractmethod
     def __call__(self, terrain, *args, **kwargs):
         """Apply transform onto the terrain. Must output terrain afterwards."""
+        raise NotImplementedError()

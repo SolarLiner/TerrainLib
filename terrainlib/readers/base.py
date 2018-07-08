@@ -14,11 +14,11 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import abc
 
 from ..terrain import Terrain
 
-class TerrainReader(metaclass=abc.ABCMeta):
-    @abc.abstractmethod
+
+class TerrainReader:
     def __call__(self, terrain: Terrain, *args, **kwargs):
         """Caller to process terrain data and output it into another format."""
+        raise NotImplementedError()
